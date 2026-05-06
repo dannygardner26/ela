@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Imagen 4 Gallery</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #111; padding: 40px; font-family: system-ui, sans-serif; }
+        h1 { color: #fff; text-align: center; margin-bottom: 32px; font-weight: 300; }
+        .gallery { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; max-width: 1400px; margin: 0 auto; align-items: start; }
+        .card { background: #1a1a1a; border-radius: 12px; overflow: hidden; border: 1px solid #2a2a2a; }
+        .card img { width: 100%; display: block; }
+        .card .info { padding: 16px 20px; }
+        .card h3 { color: #eee; font-size: 0.9rem; margin-bottom: 6px; }
+        .card .meta { color: #888; font-size: 0.72rem; line-height: 1.5; }
+        .card .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: 600; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .tag-portrait { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+        .tag-square { background: rgba(236, 72, 153, 0.15); color: #f472b6; }
+        .tag-wide { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    </style>
+</head>
+<body>
+    <h1>Imagen 4 Generations</h1>
+    <div class="gallery">
+        <div class="card">
+            <img src="images/lebron-goat.png" alt="LeBron GOAT">
+            <div class="info">
+                <h3>Why LeBron Is the GOAT</h3>
+                <p class="meta">Cinematic sports poster. Shot from below, dramatic golden lighting, stat overlays. Dark moody atmosphere with gold/purple accents.</p>
+                <span class="tag tag-portrait">9:16 Portrait</span>
+            </div>
+        </div>
+        <div class="card">
+            <img src="images/music-impact.png" alt="Music Impact">
+            <div class="info">
+                <h3>Music's Impact on Gen Z</h3>
+                <p class="meta">Mixed-media zine collage. Vinyl, AirPods, Spotify waves, concert crowds. Neon pink/blue, grunge textures, torn paper, sticker aesthetic.</p>
+                <span class="tag tag-square">1:1 Square</span>
+            </div>
+        </div>
+        <div class="card">
+            <img src="images/ai-fake-news.png" alt="AI Fake News">
+            <div class="info">
+                <h3>AI-Generated Fake News</h3>
+                <p class="meta">Editorial dystopian illustration. Glitching newspaper, robotic hand writing headlines, FAKE stamps, digital artifacts. Photojournalism meets sci-fi.</p>
+                <span class="tag tag-wide">16:9 Wide</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

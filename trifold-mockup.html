@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trifold Mockup - AI Hallucinations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Copernicus:wght@400;600;700&family=Styrene+A:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F5F0E8;
+            --cream-dark: #EDE7DB;
+            --parchment: #FAF7F2;
+            --text-primary: #1A1511;
+            --text-secondary: #5C5549;
+            --text-tertiary: #8B8072;
+            --terracotta: #C4533A;
+            --terracotta-light: #E8715A;
+            --terracotta-bg: rgba(196, 83, 58, 0.06);
+            --border: #DDD5C9;
+            --border-light: #EBE5DA;
+            --teal: #1A6B5C;
+            --teal-bg: rgba(26, 107, 92, 0.05);
+            --amber: #B8860B;
+            --amber-bg: rgba(184, 134, 11, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #2C2825;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .page-header h1 {
+            font-family: 'Source Serif 4', serif;
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: #BDB5A8;
+            letter-spacing: 0.5px;
+        }
+        .page-header p {
+            font-size: 0.75rem;
+            color: #7A7168;
+            margin-top: 4px;
+        }
+
+        .trifold-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            aspect-ratio: 24 / 16;
+            position: relative;
+        }
+
+        .trifold {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow:
+                0 1px 3px rgba(0,0,0,0.12),
+                0 8px 24px rgba(0,0,0,0.25),
+                0 24px 60px rgba(0,0,0,0.2);
+        }
+
+        .panel {
+            background: var(--parchment);
+            padding: 32px 24px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-left {
+            border-right: 1px solid var(--border);
+        }
+        .panel-right {
+            border-left: 1px solid var(--border);
+        }
+
+        .panel-label {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            font-size: 0.55rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+            opacity: 0.6;
+        }
+
+        .panel-header {
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .panel-header h2 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .section {
+            margin-bottom: 16px;
+        }
+        .section h3 {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--text-tertiary);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .section p {
+            font-size: 0.73rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        .section ul {
+            padding-left: 14px;
+            list-style: none;
+        }
+        .section li {
+            font-size: 0.73rem;
+            line-height: 1.55;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+            position: relative;
+            padding-left: 4px;
+        }
+        .section li::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 7px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .image-placeholder {
+            background: var(--cream);
+            border: 1.5px dashed var(--border);
+            border-radius: 6px;
+            padding: 16px 12px;
+            text-align: center;
+            margin: 12px 0;
+        }
+        .image-placeholder .icon {
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+            opacity: 0.7;
+        }
+        .image-placeholder p {
+            font-size: 0.6rem;
+            color: var(--text-tertiary);
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .thesis-box {
+            background: var(--terracotta-bg);
+            border: 1px solid rgba(196, 83, 58, 0.15);
+            border-left: 3px solid var(--terracotta);
+            border-radius: 0 6px 6px 0;
+            padding: 12px 14px;
+            margin-top: auto;
+        }
+        .thesis-box .thesis-label {
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--terracotta);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .thesis-box p {
+            font-size: 0.68rem;
+            line-height: 1.55;
+            color: var(--text-primary);
+            font-weight: 400;
+        }
+
+        /* CENTER PANEL */
+        .panel-center {
+            background: var(--parchment);
+            padding: 36px 40px;
+        }
+
+        .center-title {
+            text-align: center;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .center-title h2 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .center-title .byline {
+            font-size: 0.78rem;
+            color: var(--text-tertiary);
+            margin-top: 6px;
+            font-style: italic;
+        }
+        .center-title .author {
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .stat-card {
+            background: var(--cream);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 12px 0;
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+        }
+        .stat-card .number {
+            font-family: 'Source Serif 4', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--terracotta);
+            line-height: 1;
+        }
+        .stat-card .label {
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .consequences-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 16px 0;
+        }
+        .consequence-item {
+            background: var(--cream);
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            padding: 12px 14px;
+        }
+        .consequence-item .field {
+            font-size: 0.58rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--terracotta);
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        .consequence-item p {
+            font-size: 0.67rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* RIGHT PANEL */
+        .quote-box {
+            background: var(--teal-bg);
+            border-left: 3px solid var(--teal);
+            border-radius: 0 6px 6px 0;
+            padding: 12px 14px;
+            margin: 12px 0;
+        }
+        .quote-box p {
+            font-family: 'Source Serif 4', serif;
+            font-style: italic;
+            font-size: 0.72rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .tip-list {
+            background: var(--amber-bg);
+            border: 1px solid rgba(184, 134, 11, 0.12);
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin: 12px 0;
+        }
+        .tip-list h4 {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--amber);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .tip-list li {
+            font-size: 0.68rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            padding-left: 4px;
+        }
+        .tip-list li::before {
+            background: var(--amber);
+        }
+
+        /* BACK PANEL */
+        .back-panel {
+            max-width: 1440px;
+            margin: 24px auto 0;
+            background: var(--parchment);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 20px 28px;
+        }
+        .back-panel h2 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .back-panel p {
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* LEGEND / NOTES */
+        .legend {
+            max-width: 1440px;
+            margin: 24px auto 0;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 12px;
+        }
+        .legend-item {
+            background: rgba(245, 240, 232, 0.04);
+            border: 1px solid rgba(245, 240, 232, 0.08);
+            border-radius: 6px;
+            padding: 14px 16px;
+        }
+        .legend-item h4 {
+            font-family: 'Source Serif 4', serif;
+            color: #BDB5A8;
+            font-size: 0.72rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .legend-item p {
+            color: #7A7168;
+            font-size: 0.65rem;
+            line-height: 1.5;
+        }
+        .legend-item .pct {
+            display: inline-block;
+            background: rgba(196, 83, 58, 0.1);
+            color: var(--terracotta-light);
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .dimensions-note {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.6rem;
+            color: #5C5549;
+            letter-spacing: 0.5px;
+        }
+        .dimensions-note span {
+            background: rgba(245, 240, 232, 0.08);
+            padding: 3px 10px;
+            border-radius: 3px;
+            border: 1px solid rgba(245, 240, 232, 0.08);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>Passion Project Trifold Mockup</h1>
+        <p>Danny Gardner | 12 Honors English | Layout Plan</p>
+    </div>
+
+    <div class="trifold-container">
+        <div class="trifold">
+            <!-- LEFT PANEL A — 6x16 -->
+            <div class="panel panel-left">
+                <span class="panel-label">Panel A &middot; 6&times;16</span>
+
+                <div class="panel-header">
+                    <h2>What Are AI Hallucinations?</h2>
+                </div>
+
+                <div class="section">
+                    <h3>Definition</h3>
+                    <p>When AI models generate information that sounds confident and authoritative but is completely fabricated&mdash;fake facts, invented sources, nonexistent data presented as truth.</p>
+                </div>
+
+                <div class="image-placeholder" style="padding:0; border:none; background:none;">
+                    <img src="images/chatbot-hallucination.png" alt="AI chatbot confidently stating false information" style="width:100%; border-radius:6px; border:1px solid var(--border);">
+                </div>
+
+                <div class="section">
+                    <h3>How LLMs Actually Work</h3>
+                    <p>Large Language Models don't "know" things. They predict the most statistically likely next word based on patterns in training data. They are pattern-matchers, not truth-tellers.</p>
+                </div>
+
+                <div class="image-placeholder" style="padding:0; border:none; background:none;">
+                    <img src="images/next-token.png" alt="Next-token prediction diagram" style="width:100%; border-radius:6px; border:1px solid var(--border);">
+                </div>
+
+                <div class="thesis-box">
+                    <div class="thesis-label">Thesis</div>
+                    <p>AI hallucinations&mdash;where models confidently generate false information&mdash;are an inherent flaw in how LLMs work, not a bug being fixed, which means users who trust AI output without verification risk spreading misinformation, submitting flawed work, and making dangerous decisions.</p>
+                </div>
+            </div>
+
+            <!-- CENTER PANEL B — 12x16 -->
+            <div class="panel panel-center">
+                <span class="panel-label">Panel B &middot; 12&times;16</span>
+
+                <div class="center-title">
+                    <h2>AI Hallucinations</h2>
+                    <p class="byline">When Machines Lie With Confidence</p>
+                    <p class="author">Danny Gardner</p>
+                </div>
+
+                <div class="section">
+                    <h3>Real-World Consequences</h3>
+                </div>
+
+                <div class="consequences-grid">
+                    <div class="consequence-item">
+                        <div class="field">Law</div>
+                        <p>Lawyer cited 6 fake court cases generated by ChatGPT in a federal filing (2023). He was sanctioned by the court.</p>
+                    </div>
+                    <div class="consequence-item">
+                        <div class="field">Medicine</div>
+                        <p>AI chatbots giving dangerous, fabricated health advice with zero disclaimers or source verification.</p>
+                    </div>
+                    <div class="consequence-item">
+                        <div class="field">Academia</div>
+                        <p>Students submitting papers with fabricated citations to sources and studies that don't exist.</p>
+                    </div>
+                    <div class="consequence-item">
+                        <div class="field">Journalism</div>
+                        <p>AI-generated news articles containing entirely made-up quotes attributed to real people.</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="number">36%</div>
+                    <div class="label">of ChatGPT legal references were found to be fabricated in a 2024 Stanford study on AI-generated legal research</div>
+                </div>
+
+                <div class="image-placeholder" style="padding:0; border:none; background:none;">
+                    <img src="images/headlines-collage.png" alt="News headlines about AI hallucination incidents" style="width:100%; border-radius:6px; border:1px solid var(--border);">
+                </div>
+
+                <div class="stat-card">
+                    <div class="number">1 in 4</div>
+                    <div class="label">students report using AI-generated content in their schoolwork without fact-checking the output</div>
+                </div>
+
+                <div class="image-placeholder" style="padding:0; border:none; background:none;">
+                    <img src="images/hallucination-rates.png" alt="AI hallucination rates by field infographic" style="width:100%; border-radius:6px; border:1px solid var(--border);">
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL C — 6x16 -->
+            <div class="panel panel-right">
+                <span class="panel-label">Panel C &middot; 6&times;16</span>
+
+                <div class="panel-header">
+                    <h2>Why It Happens &amp; What You Can Do</h2>
+                </div>
+
+                <div class="section">
+                    <h3>The Sycophancy Problem</h3>
+                    <p>LLMs are trained to be agreeable. They'd rather give a confident wrong answer than say "I don't know." Ask a leading question and you get a confirming lie.</p>
+                </div>
+
+                <div class="image-placeholder" style="padding:0; border:none; background:none;">
+                    <img src="images/sycophancy-comparison.png" alt="AI giving contradicting answers based on question framing" style="width:100%; border-radius:6px; border:1px solid var(--border);">
+                </div>
+
+                <div class="section">
+                    <h3>Why This Can't Be "Fixed"</h3>
+                    <ul>
+                        <li>Not a bug&mdash;it's how prediction works</li>
+                        <li>Models have no internal fact-checker</li>
+                        <li>Confidence is fluency, not accuracy</li>
+                        <li>More training = better writing, not better truth</li>
+                    </ul>
+                </div>
+
+                <div class="tip-list">
+                    <h4>Protect Yourself</h4>
+                    <ul>
+                        <li>Never trust AI output without verification</li>
+                        <li>Check every source and citation</li>
+                        <li>Treat it as a draft tool, not an authority</li>
+                        <li>Ask it to challenge you, not confirm you</li>
+                    </ul>
+                </div>
+
+                <div class="quote-box">
+                    <p>&ldquo;AI doesn't lie on purpose&mdash;it just doesn't know the difference between truth and plausible fiction.&rdquo;</p>
+                </div>
+
+                <div class="section">
+                    <h3>Primary Source</h3>
+                    <p><em>Interview with teacher/professional about AI hallucinations encountered in their field</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BACK -->
+    <div class="back-panel">
+        <h2>Back of Trifold &mdash; Works Cited</h2>
+        <p>
+            1. [Research paper on LLM hallucination rates]<br>
+            2. [Mata v. Avianca case / news coverage of lawyer sanctions]<br>
+            3. [Study on student AI usage and fact-checking habits]<br>
+            4. [Technical explainer on how LLMs generate text]<br>
+            5. [Article on AI sycophancy and agreement bias]<br>
+            6. (Primary) Interview transcript &mdash; teacher/professional on hallucinations in their field<br>
+            <br>
+            + Image citations with URLs
+        </p>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="legend">
+        <div class="legend-item">
+            <h4>Panel A Strategy</h4>
+            <p>The explainer. Define hallucinations, show how LLMs work simply, anchor the thesis. First thing they read approaching from the left.</p>
+            <span class="pct">~60% text / 40% images</span>
+        </div>
+        <div class="legend-item">
+            <h4>Panel B Strategy</h4>
+            <p>The showstopper. Title, stats, real cases, visual impact. Double-width gives room for a consequences grid, stat cards, and headline collage. Eyes land here first.</p>
+            <span class="pct">~45% text / 55% images</span>
+        </div>
+        <div class="legend-item">
+            <h4>Panel C Strategy</h4>
+            <p>The takeaway. Why it happens (sycophancy), why it's unfixable, and actionable advice. They walk away with this.</p>
+            <span class="pct">~70% text / 30% images</span>
+        </div>
+    </div>
+
+    <p class="dimensions-note">
+        <span>Board dimensions: 24" &times; 16" &mdash; Panel A: 6"&times;16" | Panel B: 12"&times;16" | Panel C: 6"&times;16"</span>
+    </p>
+</body>
+</html>
