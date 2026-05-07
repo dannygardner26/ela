@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Copernicus:wght@400;600;700&family=Styrene+A:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <style>
         :root {
             --cream: #F5F0E8;
@@ -33,6 +34,8 @@
             background: #2C2825;
             padding: 40px 20px;
             min-height: 100vh;
+            overflow-x: auto;
+            min-width: 1440px;
         }
 
         .page-header {
@@ -53,15 +56,14 @@
         }
 
         .trifold-container {
-            max-width: 1440px;
+            width: 1440px;
             margin: 0 auto;
         }
 
         .trifold {
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            width: 100%;
-            min-height: 0;
+            grid-template-columns: 360px 720px 360px;
+            width: 1440px;
             border-radius: 4px;
             overflow: hidden;
             box-shadow:
@@ -321,7 +323,7 @@
 
         /* BACK PANEL */
         .back-panel {
-            max-width: 1440px;
+            width: 1440px;
             margin: 24px auto 0;
             background: var(--parchment);
             border: 1px solid var(--border);
@@ -345,10 +347,10 @@
 
         /* LEGEND / NOTES */
         .legend {
-            max-width: 1440px;
+            width: 1440px;
             margin: 24px auto 0;
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-columns: 360px 720px 360px;
             gap: 12px;
         }
         .legend-item {
@@ -393,9 +395,34 @@
             border-radius: 3px;
             border: 1px solid rgba(245, 240, 232, 0.08);
         }
+        .toolbar {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+        }
+        .toolbar button {
+            background: var(--terracotta);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .toolbar button:hover { background: var(--terracotta-light); transform: translateY(-1px); }
     </style>
 </head>
 <body>
+    <div class="toolbar">
+        <button onclick="downloadPNG()">Download PNG</button>
+    </div>
+
     <div class="page-header">
         <h1>Passion Project Trifold Mockup</h1>
         <p>Danny Gardner | 12 Honors English | Layout Plan</p>
@@ -571,5 +598,16 @@
     <p class="dimensions-note">
         <span>Board dimensions: 24" &times; 16" &mdash; Panel A: 6"&times;16" | Panel B: 12"&times;16" | Panel C: 6"&times;16"</span>
     </p>
+
+    <script>
+        async function downloadPNG() {
+            const el = document.querySelector('.trifold-container');
+            const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#2C2825' });
+            const link = document.createElement('a');
+            link.download = 'ai-hallucinations-trifold.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
 </body>
 </html>

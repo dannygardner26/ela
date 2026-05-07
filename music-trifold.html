@@ -29,6 +29,8 @@
             color: var(--text);
             padding: 30px 20px;
             min-height: 100vh;
+            overflow-x: auto;
+            min-width: 1440px;
         }
 
         .fab {
@@ -94,14 +96,13 @@
         }
 
         .trifold-container {
-            max-width: 1440px;
+            width: 1440px;
             margin: 0 auto;
         }
         .trifold {
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
-            width: 100%;
-            min-height: 0;
+            grid-template-columns: 360px 720px 360px;
+            width: 1440px;
             border-radius: 16px;
             overflow: hidden;
             border: 1px solid var(--border);
@@ -257,7 +258,7 @@
 
         /* BACK */
         .back-panel {
-            max-width: 1440px;
+            width: 1440px;
             margin: 20px auto 0;
             background: var(--surface);
             border: 1px solid var(--border);
