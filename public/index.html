@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passion Project Trifolds - Danny Gardner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #1a1815;
+            --surface: #232019;
+            --surface-hover: #2d2a21;
+            --text: #f0ebe3;
+            --text-dim: #9a9286;
+            --border: #3a362e;
+            --accent: #C4533A;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 60px 24px;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        header h1 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        header p {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        .card {
+            display: grid;
+            grid-template-columns: 200px 1fr auto;
+            align-items: center;
+            gap: 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+        .card:hover {
+            background: var(--surface-hover);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .card-thumb {
+            width: 200px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .card-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card-info h2 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .card-info p {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+        .card-info .tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .tag {
+            font-size: 0.6rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag-gold { background: rgba(255,215,0,0.1); color: #FFD700; }
+        .tag-pink { background: rgba(255,0,110,0.1); color: #FF006E; }
+        .tag-red { background: rgba(220,38,38,0.1); color: #EF4444; }
+        .tag-cream { background: rgba(196,83,58,0.1); color: #E8715A; }
+
+        .card-action {
+            font-size: 1.2rem;
+            opacity: 0.3;
+            transition: opacity 0.2s;
+        }
+        .card:hover .card-action { opacity: 1; }
+
+        .original-section {
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+        .original-section h3 {
+            font-family: 'Source Serif 4', serif;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Passion Project Trifolds</h1>
+            <p>Danny Gardner &middot; 12 Honors English &middot; 2025</p>
+        </header>
+
+        <div class="grid">
+            <a href="/hallucinations" class="card">
+                <div class="card-thumb">
+                    <img src="/images/chatbot-hallucination.png" alt="AI Hallucinations">
+                </div>
+                <div class="card-info">
+                    <h2>AI Hallucinations</h2>
+                    <p>When machines lie with confidence. How LLMs generate false information and why it's an inherent flaw, not a bug being fixed.</p>
+                    <div class="tags">
+                        <span class="tag tag-cream">Anthropic Style</span>
+                        <span class="tag tag-cream">24x16 Trifold</span>
+                    </div>
+                </div>
+                <span class="card-action">&rarr;</span>
+            </a>
+
+            <a href="/lebron" class="card">
+                <div class="card-thumb">
+                    <img src="/images/lebron-crown-goat.png" alt="LeBron GOAT">
+                </div>
+                <div class="card-info">
+                    <h2>Why LeBron James is the GOAT</h2>
+                    <p>The case for LeBron: 40,000+ points, 4 championships, 20 All-Stars, and unprecedented longevity across 21 seasons.</p>
+                    <div class="tags">
+                        <span class="tag tag-gold">Sports Poster</span>
+                        <span class="tag tag-gold">Dark + Gold</span>
+                    </div>
+                </div>
+                <span class="card-action">&rarr;</span>
+            </a>
+
+            <a href="/music" class="card">
+                <div class="card-thumb">
+                    <img src="/images/concert-crowd.png" alt="Music Impact">
+                </div>
+                <div class="card-info">
+                    <h2>Music's Impact on Gen Z</h2>
+                    <p>How streaming, algorithms, and unlimited access made music the most powerful force shaping Gen Z identity and mental health.</p>
+                    <div class="tags">
+                        <span class="tag tag-pink">Gen Z Aesthetic</span>
+                        <span class="tag tag-pink">Glassmorphism</span>
+                    </div>
+                </div>
+                <span class="card-action">&rarr;</span>
+            </a>
+
+            <a href="/fakenews" class="card">
+                <div class="card-thumb">
+                    <img src="/images/robot-typing-headlines.png" alt="AI Fake News">
+                </div>
+                <div class="card-info">
+                    <h2>AI-Generated Fake News</h2>
+                    <p>The misinformation crisis threatening democracy: unlimited fake content at zero cost, overwhelming human ability to detect truth.</p>
+                    <div class="tags">
+                        <span class="tag tag-red">Editorial</span>
+                        <span class="tag tag-red">Investigative</span>
+                    </div>
+                </div>
+                <span class="card-action">&rarr;</span>
+            </a>
+        </div>
+
+        <footer>
+            Built with Imagen 4 + Claude &middot; Each trifold includes PNG/PDF export
+        </footer>
+    </div>
+</body>
+</html>
