@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Impact of Confidence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Nunito+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <style>
+        :root {
+            --rose: #B5485F;
+            --rose-light: #D4697E;
+            --rose-bg: rgba(181, 72, 95, 0.06);
+            --gold: #C49A3C;
+            --gold-light: #E0BA5E;
+            --bg: #0F0E0D;
+            --surface: #1A1816;
+            --surface-light: #221F1C;
+            --text: #F2EDE7;
+            --text-dim: #9B9389;
+            --border: #2E2A26;
+            --gradient: linear-gradient(135deg, var(--rose), var(--gold));
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 30px 20px;
+            min-height: 100vh;
+            overflow-x: auto;
+            min-width: 1440px;
+        }
+
+        .toolbar {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+        }
+        .toolbar button {
+            background: var(--rose);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .toolbar button:hover { background: var(--rose-light); transform: translateY(-1px); }
+        .toolbar button.secondary { background: var(--surface-light); color: var(--text); border: 1px solid var(--border); }
+        .toolbar button.secondary:hover { background: var(--border); }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 400;
+        }
+
+        .trifold-container {
+            width: 1440px;
+            margin: 0 auto;
+        }
+        .trifold {
+            display: grid;
+            grid-template-columns: 360px 720px 360px;
+            width: 1440px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 80px rgba(181, 72, 95, 0.06), 0 20px 60px rgba(0,0,0,0.6);
+        }
+        .panel {
+            background: var(--surface);
+            padding: 28px 22px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient);
+        }
+        .panel-left { border-right: 1px solid var(--border); }
+        .panel-right { border-left: 1px solid var(--border); }
+
+        .panel-label {
+            position: absolute;
+            top: 14px;
+            right: 12px;
+            font-size: 0.5rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.5;
+        }
+        .panel-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--rose);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .section { margin-bottom: 14px; }
+        .section h3 {
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gold);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .section p {
+            font-size: 0.73rem;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        .section ul { list-style: none; padding: 0; }
+        .section li {
+            font-size: 0.73rem;
+            line-height: 1.5;
+            color: #ccc;
+            padding-left: 14px;
+            margin-bottom: 4px;
+            position: relative;
+        }
+        .section li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 7px;
+            width: 5px;
+            height: 5px;
+            background: var(--rose);
+            border-radius: 50%;
+        }
+
+        .stat-block {
+            background: linear-gradient(135deg, rgba(181, 72, 95, 0.12), rgba(196, 154, 60, 0.06));
+            border: 1px solid rgba(181, 72, 95, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .stat-block .number {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--rose-light);
+            line-height: 1;
+        }
+        .stat-block .label {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .thesis-box {
+            background: rgba(181, 72, 95, 0.06);
+            border: 1px solid rgba(181, 72, 95, 0.2);
+            border-left: 3px solid var(--rose);
+            border-radius: 0 6px 6px 0;
+            padding: 12px 14px;
+            margin-top: auto;
+        }
+        .thesis-box .label {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--rose);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .thesis-box p { font-size: 0.68rem; line-height: 1.55; color: #ddd; }
+
+        .quote-block {
+            background: rgba(196, 154, 60, 0.06);
+            border: 1px solid rgba(196, 154, 60, 0.15);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin: 12px 0;
+            position: relative;
+        }
+        .quote-block::before {
+            content: '\201C';
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--gold);
+            opacity: 0.4;
+            position: absolute;
+            top: 4px;
+            left: 12px;
+            line-height: 1;
+        }
+        .quote-block p {
+            font-size: 0.72rem;
+            font-style: italic;
+            line-height: 1.55;
+            color: #ddd;
+            padding-left: 20px;
+        }
+        .quote-block .attribution {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            margin-top: 6px;
+            padding-left: 20px;
+            font-style: normal;
+        }
+
+        /* CENTER */
+        .center-title {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .center-title h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.15;
+        }
+        .center-title .byline {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-top: 6px;
+            font-style: italic;
+        }
+        .center-title .author {
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        /* BACK */
+        .back-panel {
+            width: 1440px;
+            margin: 20px auto 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 28px;
+        }
+        .back-panel h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.85rem;
+            color: var(--rose);
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .back-panel p { font-size: 0.68rem; color: #999; line-height: 1.8; }
+
+        @media print {
+            .toolbar { display: none; }
+            body { background: #fff; padding: 0; }
+            .page-header { display: none; }
+            .panel { background: #fff; }
+            .panel::before { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button onclick="downloadPNG()">Download PNG</button>
+        <button class="secondary" onclick="window.print()">Print</button>
+    </div>
+
+    <div class="page-header">
+        <h1>Passion Project &mdash; The Impact of Confidence</h1>
+    </div>
+
+    <div class="trifold-container" id="trifold">
+        <div class="trifold">
+            <!-- LEFT PANEL A -->
+            <div class="panel panel-left">
+                <span class="panel-label">Panel A</span>
+                <div class="panel-header">
+                    <h2>What Is Confidence?</h2>
+                </div>
+
+                <div class="section">
+                    <h3>Defining Self-Confidence</h3>
+                    <p>Self-confidence is the belief in one's own abilities, judgment, and worth. It is not arrogance or the absence of doubt&mdash;it is the quiet certainty that you can handle what comes, even when the outcome is uncertain.</p>
+                </div>
+
+                <div class="section">
+                    <h3>Nature vs. Nurture</h3>
+                    <p>Research shows confidence is not fixed at birth. While genetics influence baseline temperament, confidence is largely built through experience, environment, and deliberate practice. It can be developed at any age.</p>
+                </div>
+
+                <div class="quote-block">
+                    <p>Whether you think you can, or you think you can't&mdash;you're right.</p>
+                    <div class="attribution">&mdash; Henry Ford</div>
+                </div>
+
+                <div class="thesis-box">
+                    <div class="label">Thesis</div>
+                    <p>Confidence is the single most transformative internal force in a person's life&mdash;it shapes academic achievement, social relationships, mental health, and long-term success more than talent or circumstance alone.</p>
+                </div>
+            </div>
+
+            <!-- CENTER PANEL B -->
+            <div class="panel panel-center">
+                <span class="panel-label">Panel B</span>
+
+                <div class="center-title">
+                    <h2>The Impact of<br>Confidence</h2>
+                    <p class="byline">How belief in yourself changes everything.</p>
+                    <p class="author">Kavya Sivarupan</p>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-block">
+                        <div class="number">85%</div>
+                        <div class="label">of people suffer from low self-esteem</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number">2x</div>
+                        <div class="label">more likely to achieve goals with high confidence</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number">70%</div>
+                        <div class="label">of students experience imposter syndrome</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number">3x</div>
+                        <div class="label">greater resilience in confident individuals</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>The Confidence-Competence Loop</h3>
+                    <p>Confidence and competence fuel each other in a positive cycle. When you believe you can succeed, you take action. Action builds skill. Skill reinforces belief. This loop explains why early wins&mdash;no matter how small&mdash;compound into transformative growth over time.</p>
+                </div>
+
+                <div class="section">
+                    <h3>The Science Behind It</h3>
+                    <p>Neuroscience shows that confident thinking activates the prefrontal cortex, enhancing decision-making and reducing the amygdala's fear response. Confident people literally think more clearly under pressure because their brain chemistry supports rational thought over panic.</p>
+                </div>
+
+                <div class="quote-block">
+                    <p>Confidence is not 'they will like me.' Confidence is 'I'll be fine if they don't.'</p>
+                    <div class="attribution">&mdash; Christina Grimmie</div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL C -->
+            <div class="panel panel-right">
+                <span class="panel-label">Panel C</span>
+                <div class="panel-header">
+                    <h2>Building Confidence</h2>
+                </div>
+
+                <div class="section">
+                    <h3>Why People Lack Confidence</h3>
+                    <ul>
+                        <li>Negative self-talk and internalized criticism from childhood</li>
+                        <li>Social comparison amplified by social media</li>
+                        <li>Fear of failure leading to avoidance of challenges</li>
+                        <li>Perfectionism that makes any result feel inadequate</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>Strategies That Work</h3>
+                    <ul>
+                        <li>Set micro-goals and celebrate small wins consistently</li>
+                        <li>Practice self-compassion&mdash;treat yourself like a friend</li>
+                        <li>Reframe failure as data, not identity</li>
+                        <li>Surround yourself with people who uplift, not diminish</li>
+                        <li>Use body language to shift internal state (power posing)</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>Real-World Impact</h3>
+                    <ul>
+                        <li>Confident students participate more and retain information better</li>
+                        <li>Confident employees earn 8-14% higher salaries on average</li>
+                        <li>Self-assured individuals form healthier relationships</li>
+                        <li>High confidence correlates with lower anxiety and depression</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h3>The Takeaway</h3>
+                    <p>Confidence isn't about being perfect or fearless. It's about trusting yourself enough to try, fail, learn, and try again. It is the foundation upon which every other form of success is built.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-panel">
+        <h2>Works Cited</h2>
+        <p>
+            1. Bandura, Albert. "Self-Efficacy: Toward a Unifying Theory of Behavioral Change." <em>Psychological Review</em>, vol. 84, no. 2, 1977, pp. 191&ndash;215.<br>
+            2. Cuddy, Amy. <em>Presence: Bringing Your Boldest Self to Your Biggest Challenges</em>. Little, Brown and Company, 2015.<br>
+            3. Trzesniewski, Kali H., et al. "Low Self-Esteem During Adolescence Predicts Poor Health, Criminal Behavior, and Limited Economic Prospects During Adulthood." <em>Developmental Psychology</em>, vol. 42, no. 2, 2006, pp. 381&ndash;390.<br>
+            4. Clance, Pauline Rose, and Suzanne Imes. "The Imposter Phenomenon in High Achieving Women: Dynamics and Therapeutic Intervention." <em>Psychotherapy: Theory, Research &amp; Practice</em>, vol. 15, no. 3, 1978, pp. 241&ndash;247.<br>
+            5. Judge, Timothy A., and Joyce E. Bono. "Relationship of Core Self-Evaluations Traits&mdash;Self-Esteem, Generalized Self-Efficacy, Locus of Control, and Emotional Stability&mdash;With Job Satisfaction and Job Performance." <em>Journal of Applied Psychology</em>, vol. 86, no. 1, 2001, pp. 80&ndash;92.<br>
+            6. Neff, Kristin. <em>Self-Compassion: The Proven Power of Being Kind to Yourself</em>. William Morrow, 2011.<br>
+        </p>
+    </div>
+
+    <script>
+        async function downloadPNG() {
+            const el = document.getElementById('trifold');
+            const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#0F0E0D' });
+            const link = document.createElement('a');
+            link.download = 'confidence-impact-trifold.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
