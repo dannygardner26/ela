@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statins and Heart Health</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <style>
+        :root {
+            --navy: #0A1628;
+            --navy-light: #122240;
+            --blue: #1565A8;
+            --blue-bright: #2196F3;
+            --blue-dim: #1E3A5F;
+            --teal: #00BFA5;
+            --teal-dim: #00897B;
+            --red-accent: #EF5350;
+            --orange: #FF9800;
+            --yellow: #FFEB3B;
+            --green: #66BB6A;
+            --surface: #0E1D35;
+            --surface-light: #152A4A;
+            --text: #F0F4F8;
+            --text-dim: #8BA3C4;
+            --border: #1E3A5F;
+            --gradient: linear-gradient(135deg, var(--blue), var(--teal));
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--navy);
+            color: var(--text);
+            padding: 30px 20px;
+            min-height: 100vh;
+            overflow-x: auto;
+            min-width: 1440px;
+        }
+
+        .toolbar {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+        }
+        .toolbar button {
+            background: var(--blue);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .toolbar button:hover { background: var(--blue-bright); transform: translateY(-1px); }
+        .toolbar button.secondary { background: var(--surface-light); color: var(--text); border: 1px solid var(--border); }
+        .toolbar button.secondary:hover { background: var(--border); }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .page-header h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 400;
+        }
+
+        .trifold-container {
+            width: 1440px;
+            margin: 0 auto;
+        }
+        .trifold {
+            display: grid;
+            grid-template-columns: 360px 720px 360px;
+            width: 1440px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 80px rgba(21, 101, 168, 0.08), 0 20px 60px rgba(0,0,0,0.6);
+        }
+        .panel {
+            background: var(--surface);
+            padding: 28px 22px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient);
+        }
+        .panel-left { border-right: 1px solid var(--border); }
+        .panel-right { border-left: 1px solid var(--border); }
+
+        .panel-label {
+            position: absolute;
+            top: 14px;
+            right: 12px;
+            font-size: 0.5rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.5;
+        }
+
+        .panel-header h2 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--blue-bright);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section { margin-bottom: 14px; }
+        .section h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.62rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--teal);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .section p {
+            font-size: 0.72rem;
+            line-height: 1.6;
+            color: #ccd6e4;
+        }
+        .section ul { list-style: none; padding: 0; }
+        .section li {
+            font-size: 0.72rem;
+            line-height: 1.5;
+            color: #ccd6e4;
+            padding-left: 14px;
+            margin-bottom: 4px;
+            position: relative;
+        }
+        .section li::before {
+            content: '+';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--blue-bright);
+            font-weight: 700;
+            font-size: 0.7rem;
+        }
+
+        .cross-icon {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            position: relative;
+            vertical-align: middle;
+            margin-right: 4px;
+        }
+        .cross-icon::before, .cross-icon::after {
+            content: '';
+            position: absolute;
+            background: var(--blue-bright);
+            border-radius: 1px;
+        }
+        .cross-icon::before {
+            width: 4px;
+            height: 14px;
+            top: 0;
+            left: 5px;
+        }
+        .cross-icon::after {
+            width: 14px;
+            height: 4px;
+            top: 5px;
+            left: 0;
+        }
+
+        .stat-block {
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin: 6px 0;
+            text-align: center;
+        }
+        .stat-block .number {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+        .stat-block .number.red { color: var(--red-accent); }
+        .stat-block .number.orange { color: var(--orange); }
+        .stat-block .number.green { color: var(--green); }
+        .stat-block .number.teal { color: var(--teal); }
+        .stat-block .number.blue { color: var(--blue-bright); }
+        .stat-block .number.yellow { color: var(--yellow); }
+        .stat-block .label {
+            font-size: 0.58rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .stats-row-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 6px;
+            margin: 10px 0;
+        }
+
+        .pathway-step {
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--blue-bright);
+            border-radius: 0 6px 6px 0;
+            padding: 8px 12px;
+            margin: 5px 0;
+        }
+        .pathway-step .step-num {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: var(--teal);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .pathway-step p {
+            font-size: 0.68rem;
+            line-height: 1.45;
+            color: #ccd6e4;
+            margin-top: 2px;
+        }
+
+        .research-box {
+            background: rgba(21, 101, 168, 0.1);
+            border: 1px solid rgba(21, 101, 168, 0.3);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin: 10px 0;
+        }
+        .research-box .label {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--blue-bright);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        .research-box p { font-size: 0.68rem; line-height: 1.5; color: #ccd6e4; }
+
+        .benefit-risk {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .benefit-box, .risk-box {
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+        .benefit-box {
+            background: rgba(102, 187, 106, 0.08);
+            border: 1px solid rgba(102, 187, 106, 0.3);
+        }
+        .benefit-box h4 {
+            font-size: 0.6rem;
+            color: var(--green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .risk-box {
+            background: rgba(239, 83, 80, 0.08);
+            border: 1px solid rgba(239, 83, 80, 0.3);
+        }
+        .risk-box h4 {
+            font-size: 0.6rem;
+            color: var(--red-accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .benefit-box li::before { color: var(--green) !important; content: '\2713' !important; }
+        .risk-box li::before { color: var(--red-accent) !important; content: '!' !important; }
+
+        .table-mini {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8px 0;
+            font-size: 0.62rem;
+        }
+        .table-mini th {
+            background: var(--blue);
+            color: #fff;
+            padding: 6px 8px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .table-mini td {
+            padding: 5px 8px;
+            border-bottom: 1px solid var(--border);
+            color: #ccd6e4;
+        }
+        .table-mini tr:nth-child(even) td { background: rgba(21, 101, 168, 0.06); }
+
+        /* CENTER */
+        .center-title {
+            text-align: center;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+        .center-title h2 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 2.1rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.15;
+        }
+        .center-title .byline {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            margin-top: 6px;
+            font-style: italic;
+        }
+        .center-title .author {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+        .center-title .class-info {
+            font-size: 0.55rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+        }
+
+        /* BACK */
+        .back-panel {
+            width: 1440px;
+            margin: 20px auto 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 28px;
+        }
+        .back-panel h2 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.85rem;
+            color: var(--blue-bright);
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+        }
+        .back-panel p { font-size: 0.62rem; color: var(--text-dim); line-height: 1.9; }
+
+        @media print {
+            .toolbar { display: none; }
+            body { background: #fff; padding: 0; }
+            .page-header { display: none; }
+            .panel { background: #fff; }
+            .panel::before { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button onclick="downloadPNG()">Download PNG</button>
+        <button class="secondary" onclick="window.print()">Print</button>
+    </div>
+
+    <div class="page-header">
+        <h1>Allied Health Presentation &mdash; Statins and Heart Health</h1>
+    </div>
+
+    <div class="trifold-container" id="trifold">
+        <div class="trifold">
+            <!-- LEFT PANEL A -->
+            <div class="panel panel-left">
+                <span class="panel-label">Panel A</span>
+                <div class="panel-header">
+                    <h2><span class="cross-icon"></span> Background</h2>
+                </div>
+
+                <div class="section">
+                    <h3>Research Question</h3>
+                    <p>How do statins affect LDL cholesterol levels and cardiovascular event risk in patients aged 40&ndash;75 years old?</p>
+                </div>
+
+                <div class="section">
+                    <h3>Why This Matters</h3>
+                    <p>Heart disease is the leading cause of death for both men and women, causing 1 in every 3 deaths in the United States. An estimated 920,000 lives were lost to cardiovascular disease in 2023, with $417.9 billion in associated healthcare costs (Centers for Disease Control and Prevention [CDC], 2024).</p>
+                </div>
+
+                <div class="section">
+                    <h3>What Is LDL Cholesterol?</h3>
+                    <p>LDL (low-density lipoprotein) is a particle in the blood made up of lipids and proteins that carries fats through the bloodstream. Elevated LDL leads to plaque buildup in arteries (atherosclerosis), increasing risk of coronary artery disease, stroke, and heart attack (Cleveland Clinic, 2024).</p>
+                </div>
+
+                <table class="table-mini">
+                    <tr><th>LDL-C (mg/dL)</th><th>Classification</th></tr>
+                    <tr><td>&lt; 100</td><td>Optimal</td></tr>
+                    <tr><td>100&ndash;129</td><td>Near Optimal</td></tr>
+                    <tr><td>130&ndash;159</td><td>Borderline High</td></tr>
+                    <tr><td>160&ndash;189</td><td>High</td></tr>
+                    <tr><td>&ge; 190</td><td>Very High</td></tr>
+                </table>
+
+                <div class="section">
+                    <h3>The Disease Pathway</h3>
+                </div>
+                <div class="pathway-step">
+                    <div class="step-num">Step 1</div>
+                    <p>Excessive LDL particles circulate in the blood</p>
+                </div>
+                <div class="pathway-step">
+                    <div class="step-num">Step 2</div>
+                    <p>LDL cholesterol is oxidized, acting abnormally in the body</p>
+                </div>
+                <div class="pathway-step">
+                    <div class="step-num">Step 3</div>
+                    <p>Oxidized LDL disrupts endothelium function, forms deposits, triggers inflammation</p>
+                </div>
+                <div class="pathway-step">
+                    <div class="step-num">Step 4</div>
+                    <p>Vessel tears or becomes blocked &mdash; heart attack, stroke, or blood clot</p>
+                </div>
+            </div>
+
+            <!-- CENTER PANEL B -->
+            <div class="panel panel-center">
+                <span class="panel-label">Panel B</span>
+
+                <div class="center-title">
+                    <h2>Statins and<br>Heart Health</h2>
+                    <p class="byline">How statins affect LDL cholesterol and cardiovascular outcomes.</p>
+                    <p class="author">Nathan Wilner</p>
+                    <p class="class-info">TCHS Pickering &middot; Allied Health &middot; Sarah Katchur &middot; 01/07/2026</p>
+                </div>
+
+                <div class="section">
+                    <h3>What Are Statins?</h3>
+                    <p>Statins are the most prescribed medication in order to combat high cholesterol, with around 200 million people worldwide taking them. Atorvastatin is the most prescribed drug in all of America. They have been FDA-approved since 1987 and work by lowering LDL cholesterol and stabilizing arterial plaque (Johns Hopkins Medicine, n.d.).</p>
+                </div>
+
+                <div class="section">
+                    <h3>Mechanism of Action</h3>
+                </div>
+                <div class="pathway-step">
+                    <div class="step-num">1 &mdash; Inhibit Enzyme</div>
+                    <p>Statins inhibit HMG-CoA reductase, the rate-limiting enzyme in hepatic cholesterol production</p>
+                </div>
+                <div class="pathway-step">
+                    <div class="step-num">2 &mdash; Reduced Synthesis</div>
+                    <p>Liver produces less cholesterol, causing movement of sterol regulatory element binding proteins (SREBPs)</p>
+                </div>
+                <div class="pathway-step">
+                    <div class="step-num">3 &mdash; More LDL Receptors</div>
+                    <p>SREBPs increase transcription of the LDL receptor gene, producing more receptors</p>
+                </div>
+                <div class="pathway-step">
+                    <div class="step-num">4 &mdash; LDL Clearance</div>
+                    <p>More LDL receptors cause greater uptake and clearance of LDL from the bloodstream (Feingold, 2024)</p>
+                </div>
+
+                <div class="section" style="margin-top: 12px;">
+                    <h3>Statin Intensity Classification</h3>
+                </div>
+                <table class="table-mini">
+                    <tr><th>Intensity</th><th>LDL Reduction</th><th>Examples</th></tr>
+                    <tr><td style="color: var(--red-accent); font-weight: 600;">High</td><td>&ge;50%</td><td>Atorvastatin 40&ndash;80mg, Rosuvastatin 20&ndash;40mg</td></tr>
+                    <tr><td style="color: var(--orange); font-weight: 600;">Moderate</td><td>30&ndash;49%</td><td>Atorvastatin 10&ndash;20mg, Simvastatin 20&ndash;40mg</td></tr>
+                    <tr><td style="color: var(--green); font-weight: 600;">Low</td><td>&lt;30%</td><td>Simvastatin 10mg, Pravastatin 10&ndash;20mg</td></tr>
+                </table>
+
+                <div class="stats-row-4" style="margin-top: 12px;">
+                    <div class="stat-block">
+                        <div class="number red">39%&darr;</div>
+                        <div class="label">LDL-C Reduction<br>5mg Rosuvastatin</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number orange">44%&darr;</div>
+                        <div class="label">LDL-C Reduction<br>10mg</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number green">50%&darr;</div>
+                        <div class="label">LDL-C Reduction<br>20mg</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number teal">55%&darr;</div>
+                        <div class="label">LDL-C Reduction<br>40mg</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL C -->
+            <div class="panel panel-right">
+                <span class="panel-label">Panel C</span>
+                <div class="panel-header">
+                    <h2><span class="cross-icon"></span> Findings &amp; Conclusions</h2>
+                </div>
+
+                <div class="section">
+                    <h3>Key Data</h3>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-block">
+                        <div class="number blue">22%</div>
+                        <div class="label">Relative Risk Reduction in Major Vascular Events per 1 mmol/L LDL-C decrease</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number red">20%&darr;</div>
+                        <div class="label">Deaths from Coronary Disease</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number orange">16%&darr;</div>
+                        <div class="label">Ischemic Stroke</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number green">10%&darr;</div>
+                        <div class="label">All-Cause Mortality</div>
+                    </div>
+                </div>
+                <p style="font-size: 0.58rem; color: var(--text-dim); margin-bottom: 10px;">(Cholesterol Treatment Trialists&rsquo; [CTT] Collaboration et al., 2010)</p>
+
+                <div class="section">
+                    <h3>Research Findings</h3>
+                    <ul>
+                        <li>Log-linear relationship between statin dose and LDL-C reduction: doubling dose reduces LDL-C by 5.6&ndash;6.2% (Oni-Orisan et al., 2018)</li>
+                        <li>Benefits consistent regardless of age, sex, or baseline LDL-C (CTT Collaborators, 2012)</li>
+                        <li>No increase in cancer incidence or non-vascular mortality (CTT Collaboration, 2010)</li>
+                    </ul>
+                </div>
+
+                <div class="benefit-risk">
+                    <div class="benefit-box">
+                        <h4>Benefits</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">22% reduction in CV events</li>
+                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">10% reduction in mortality</li>
+                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">Cost-effective medication</li>
+                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">Consistent effects over time</li>
+                        </ul>
+                    </div>
+                    <div class="risk-box">
+                        <h4>Risks &amp; Side Effects</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">Muscle pain (~1%)</li>
+                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">New-onset diabetes (10&ndash;36%)</li>
+                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">Rhabdomyolysis (rare)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="research-box">
+                    <div class="label">Conclusion</div>
+                    <p>For most patients with elevated cardiovascular risk, the benefits of statins clearly overshadow the potential risks. Statins are highly effective at lowering LDL cholesterol (30&ndash;50%), with strong evidence supporting a 22% reduction in major cardiovascular events per 38.67 mg/dL decrease in LDL-C.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-panel">
+        <h2>Works Cited</h2>
+        <p>
+            1. Centers for Disease Control and Prevention. (2024, October 24). Heart disease facts. U.S. Department of Health and Human Services. https://www.cdc.gov/heart-disease/data-research/facts-stats/index.html<br>
+            2. Cholesterol Treatment Trialists&rsquo; (CTT) Collaboration, Baigent, C., Blackwell, L., et al. (2010). Efficacy and safety of more intensive lowering of LDL cholesterol: A meta-analysis of data from 170,000 participants in 26 randomised trials. <em>Lancet</em>, 376(9753), 1670&ndash;1681.<br>
+            3. Cholesterol Treatment Trialists&rsquo; (CTT) Collaboration, Baigent, C., Blackwell, L., et al. (2012). The effects of lowering LDL cholesterol with statin therapy in people at low risk of vascular disease: Meta-analysis of individual data from 27 randomised trials. <em>Lancet</em>, 380(9841), 581&ndash;590.<br>
+            4. Cholesterol Treatment Trialists&rsquo; (CTT) Collaboration. (2022). Effect of statin therapy on muscle symptoms: An individual participant data meta-analysis of large-scale, randomised, double-blind trials. <em>Lancet</em>, 400(10355), 832&ndash;845.<br>
+            5. Cholesterol Treatment Trialists&rsquo; (CTT) Collaboration. (2024). Effects of statin therapy on diagnoses of new-onset diabetes and worsening glycaemia in large-scale randomised blinded statin trials. <em>The Lancet Diabetes &amp; Endocrinology</em>, 12(5), 306&ndash;319.<br>
+            6. Cleveland Clinic. (2024, December 23). LDL cholesterol: What it is &amp; how to manage it. https://my.clevelandclinic.org/health/articles/24391-ldl-cholesterol<br>
+            7. Feingold, K. R. (2024, February 12). Cholesterol lowering drugs. In K. R. Feingold et al. (Eds.), <em>Endotext</em>. MDText.com, Inc. https://www.ncbi.nlm.nih.gov/books/NBK395573/<br>
+            8. Institute for Quality and Efficiency in Health Care. (2025, September 17). In brief: What is cholesterol and how does arteriosclerosis develop? InformedHealth.org.<br>
+            9. Johns Hopkins Medicine. (n.d.). How statin drugs protect the heart. https://www.hopkinsmedicine.org/health/wellness-and-prevention/how-statin-drugs-protect-the-heart<br>
+            10. Karlson, B. W., Palmer, M. K., Nicholls, S. J., et al. (2016). Doses of rosuvastatin, atorvastatin and simvastatin that induce equal reductions in LDL-C and non-HDL-C: Results from the VOYAGER meta-analysis. <em>European Journal of Preventive Cardiology</em>, 23(7), 744&ndash;747.<br>
+            11. Mendes, P., Robles, P. G., &amp; Mathur, S. (2014). Statin-induced rhabdomyolysis: A comprehensive review of case reports. <em>Physiotherapy Canada</em>, 66(2), 124&ndash;132.<br>
+            12. Oni-Orisan, A., Hoffmann, T. J., et al. (2018). Characterization of Statin Low-Density Lipoprotein Cholesterol Dose-Response Using Electronic Health Records. <em>Circulation: Genomic and Precision Medicine</em>, 11(9), e002043.<br>
+        </p>
+    </div>
+
+    <script>
+        async function downloadPNG() {
+            const el = document.getElementById('trifold');
+            const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#0A1628' });
+            const link = document.createElement('a');
+            link.download = 'statins-heart-health-trifold.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
