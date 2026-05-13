@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Copernicus:wght@400;600;700&family=Styrene+A:wght@300;400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <script src="/print-tiles.js" defer></script>
+    <link rel="stylesheet" href="/trifold-mobile.css">
+    <script src="/trifold-mobile.js" defer></script>
     <style>
         :root {
             --cream: #F5F0E8;
@@ -418,61 +420,6 @@
         }
         .toolbar button:hover { background: var(--terracotta-light); transform: translateY(-1px); }
 
-        /* MOBILE RESPONSIVE */
-        @media (max-width: 768px) {
-            body {
-                min-width: unset;
-                padding: 20px 10px;
-                overflow-x: hidden;
-            }
-            .toolbar {
-                position: fixed;
-                top: auto;
-                bottom: 12px;
-                right: 12px;
-                flex-wrap: wrap;
-                justify-content: flex-end;
-                max-width: 50vw;
-            }
-            .toolbar button { font-size: 0.65rem; padding: 6px 12px; }
-            .page-header h1 { font-size: 0.85rem; }
-            .page-header p { font-size: 0.7rem; }
-            .trifold-container { width: 100%; }
-            .trifold {
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-                grid-template-columns: unset;
-            }
-            .panel {
-                padding: 24px 18px;
-                border-right: none !important;
-                border-left: none !important;
-                border-bottom: 1px solid var(--border);
-            }
-            .panel-center { padding: 28px 18px; }
-            .panel-label { display: none; }
-            .panel-header h2 { font-size: 1.1rem; }
-            .center-title h2 { font-size: 1.6rem; }
-            .center-title .byline { font-size: 0.75rem; }
-            .consequences-grid { grid-template-columns: 1fr; }
-            .stat-card { flex-direction: column; text-align: center; }
-            .stat-card .number { font-size: 1.5rem; }
-            .section p { font-size: 0.8rem; }
-            .section li { font-size: 0.8rem; }
-            .thesis-box p { font-size: 0.75rem; }
-            .back-panel {
-                width: 100%;
-                padding: 16px 18px;
-                margin-top: 12px;
-            }
-            .back-panel p { font-size: 0.65rem; }
-            .legend {
-                width: 100%;
-                grid-template-columns: 1fr;
-            }
-            .dimensions-note { font-size: 0.55rem; }
-        }
     </style>
 </head>
 <body>

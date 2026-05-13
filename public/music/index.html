@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <script src="/print-tiles.js" defer></script>
+    <link rel="stylesheet" href="/trifold-mobile.css">
+    <script src="/trifold-mobile.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
     <style>
         :root {
@@ -277,46 +279,6 @@
             border-bottom: 1px solid var(--border);
         }
         .back-panel p { font-size: 0.68rem; color: #888; line-height: 1.8; }
-
-        /* MOBILE RESPONSIVE */
-        @media (max-width: 768px) {
-            body {
-                min-width: unset;
-                padding: 16px 10px;
-                overflow-x: hidden;
-            }
-            .fab { bottom: 16px; right: 16px; }
-            .page-header h1 { font-size: 0.7rem; letter-spacing: 2px; }
-            .trifold-container { width: 100%; }
-            .trifold {
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-                grid-template-columns: unset;
-                border-radius: 12px;
-            }
-            .panel {
-                padding: 24px 18px;
-                border-right: none !important;
-                border-left: none !important;
-                border-bottom: 1px solid var(--border);
-            }
-            .panel-label { display: none; }
-            .panel-header h2 { font-size: 1.1rem; }
-            .center-title h2 { font-size: 1.8rem; }
-            .center-title .byline { font-size: 0.75rem; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .glass-card .stat { font-size: 1.3rem; }
-            .section p { font-size: 0.8rem; }
-            .section li { font-size: 0.8rem; }
-            .thesis-box p { font-size: 0.75rem; }
-            .back-panel {
-                width: 100%;
-                padding: 16px 18px;
-                margin-top: 12px;
-            }
-            .back-panel p { font-size: 0.65rem; }
-        }
 
         @media print {
             .fab { display: none; }

@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Algorithm: How Social Media Controls You</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="/print-tiles.js" defer></script>
+    <link rel="stylesheet" href="/trifold-mobile.css">
+    <script src="/trifold-mobile.js" defer></script>
+    <style>
+        :root {
+            --neon: #00FF41;
+            --neon-dim: #00CC33;
+            --neon-glow: rgba(0, 255, 65, 0.15);
+            --cyan: #00E5FF;
+            --cyan-dim: #00B8D4;
+            --cyan-glow: rgba(0, 229, 255, 0.1);
+            --bg: #0A0A0A;
+            --surface: #0E0E0E;
+            --surface-light: #161616;
+            --text: #E0E0E0;
+            --text-dim: #6B6B6B;
+            --border: #1A1A1A;
+            --border-glow: #0D2B0D;
+            --red: #FF003C;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 30px 20px;
+            min-height: 100vh;
+            overflow-x: auto;
+            min-width: 1440px;
+        }
+
+        /* scanline overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 65, 0.015) 2px,
+                rgba(0, 255, 65, 0.015) 4px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .toolbar {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            z-index: 1000;
+        }
+        .toolbar button {
+            background: var(--neon);
+            color: #0A0A0A;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .toolbar button:hover { background: #33FF66; box-shadow: 0 0 16px rgba(0,255,65,0.4); transform: translateY(-1px); }
+        .toolbar button.secondary { background: var(--surface-light); color: var(--neon); border: 1px solid var(--border-glow); }
+        .toolbar button.secondary:hover { background: #1A2A1A; border-color: var(--neon-dim); box-shadow: 0 0 12px rgba(0,255,65,0.2); }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .page-header h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--neon-dim);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 400;
+        }
+        .page-header h1::before { content: '> '; color: var(--text-dim); }
+        .page-header h1::after { content: '_'; animation: blink 1s infinite; color: var(--neon); }
+        @keyframes blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+
+        .trifold-container {
+            width: 1440px;
+            margin: 0 auto;
+        }
+        .trifold {
+            display: grid;
+            grid-template-columns: 360px 720px 360px;
+            width: 1440px;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 0 80px rgba(0,255,65,0.04), 0 0 160px rgba(0,0,0,0.8);
+            border: 1px solid var(--border-glow);
+        }
+        .panel {
+            background: var(--surface);
+            padding: 28px 22px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+        /* top glow bar */
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon), transparent);
+            box-shadow: 0 0 10px var(--neon-glow);
+        }
+        /* subtle grid pattern */
+        .panel::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                linear-gradient(rgba(0,255,65,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,65,0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+        }
+        .panel-left { border-right: 1px solid var(--border-glow); }
+        .panel-right { border-left: 1px solid var(--border-glow); }
+
+        .panel-label {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.48rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.4;
+            z-index: 1;
+        }
+        .panel-header h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--neon);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-glow);
+            text-shadow: 0 0 20px rgba(0,255,65,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        .panel-header h2::before {
+            content: '// ';
+            color: var(--text-dim);
+            font-weight: 400;
+        }
+        .section { margin-bottom: 14px; position: relative; z-index: 1; }
+        .section h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--cyan);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .section h3::before { content: '$ '; color: var(--text-dim); opacity: 0.5; }
+        .section p {
+            font-size: 0.73rem;
+            line-height: 1.6;
+            color: #B0B0B0;
+        }
+        .section ul { list-style: none; padding: 0; }
+        .section li {
+            font-size: 0.73rem;
+            line-height: 1.5;
+            color: #B0B0B0;
+            padding-left: 16px;
+            margin-bottom: 4px;
+            position: relative;
+        }
+        .section li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--neon);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+
+        .stat-block {
+            background: linear-gradient(135deg, rgba(0,255,65,0.06), rgba(0,229,255,0.03));
+            border: 1px solid rgba(0,255,65,0.15);
+            border-radius: 4px;
+            padding: 12px 14px;
+            margin: 8px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon), transparent);
+        }
+        .stat-block .number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--neon);
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(0,255,65,0.4), 0 0 40px rgba(0,255,65,0.15);
+        }
+        .stat-block .label {
+            font-size: 0.55rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 4px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 12px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .thesis-box {
+            background: rgba(0,255,65,0.04);
+            border: 1px solid rgba(0,255,65,0.15);
+            border-left: 3px solid var(--neon);
+            border-radius: 0 4px 4px 0;
+            padding: 12px 14px;
+            margin-top: auto;
+            position: relative;
+            z-index: 1;
+        }
+        .thesis-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.52rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--neon);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        .thesis-box p { font-size: 0.68rem; line-height: 1.55; color: #C8C8C8; }
+
+        .quote-block {
+            background: rgba(0,229,255,0.04);
+            border: 1px solid rgba(0,229,255,0.12);
+            border-radius: 4px;
+            padding: 14px 16px;
+            margin: 12px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .quote-block::before {
+            content: '"';
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.2rem;
+            color: var(--cyan);
+            opacity: 0.3;
+            position: absolute;
+            top: 4px;
+            left: 10px;
+            line-height: 1;
+        }
+        .quote-block p {
+            font-size: 0.72rem;
+            font-style: italic;
+            line-height: 1.55;
+            color: #C8C8C8;
+            padding-left: 22px;
+        }
+        .quote-block .attribution {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--cyan-dim);
+            margin-top: 6px;
+            padding-left: 22px;
+            font-style: normal;
+        }
+
+        /* hook / lead stat on panel A */
+        .hook-stat {
+            background: linear-gradient(135deg, rgba(255,0,60,0.08), rgba(0,255,65,0.05));
+            border: 1px solid rgba(255,0,60,0.2);
+            border-radius: 4px;
+            padding: 14px;
+            margin-bottom: 14px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .hook-stat .number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--red);
+            text-shadow: 0 0 20px rgba(255,0,60,0.4);
+            line-height: 1;
+        }
+        .hook-stat .label {
+            font-size: 0.58rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 4px;
+        }
+
+        /* CENTER TITLE */
+        .center-title {
+            text-align: center;
+            margin-bottom: 18px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-glow);
+            position: relative;
+            z-index: 1;
+        }
+        .center-title .prefix {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .center-title h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: var(--neon);
+            line-height: 1.15;
+            text-shadow: 0 0 30px rgba(0,255,65,0.3), 0 0 60px rgba(0,255,65,0.1);
+            letter-spacing: -0.5px;
+        }
+        .center-title .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            color: var(--cyan);
+            margin-top: 6px;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+        .center-title .author {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            color: var(--text-dim);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 400;
+        }
+        .center-title .class-info {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.5rem;
+            color: #444;
+            margin-top: 3px;
+            letter-spacing: 1px;
+        }
+
+        /* Inline SVG containers */
+        .svg-container {
+            margin: 14px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .svg-container svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Terminal-style info block */
+        .terminal-block {
+            background: #050505;
+            border: 1px solid var(--border-glow);
+            border-radius: 4px;
+            padding: 10px 12px;
+            margin: 10px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--neon-dim);
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+        .terminal-block .prompt { color: var(--cyan); }
+        .terminal-block .comment { color: #444; }
+        .terminal-block .val { color: var(--neon); }
+        .terminal-block .warn { color: var(--red); }
+
+        /* Two-column comparison */
+        .compare-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 12px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .compare-box {
+            border-radius: 4px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        .compare-box.algo {
+            background: rgba(255,0,60,0.06);
+            border: 1px solid rgba(255,0,60,0.15);
+        }
+        .compare-box.chrono {
+            background: rgba(0,255,65,0.06);
+            border: 1px solid rgba(0,255,65,0.15);
+        }
+        .compare-box .box-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .compare-box.algo .box-title { color: var(--red); }
+        .compare-box.chrono .box-title { color: var(--neon); }
+        .compare-box p {
+            font-size: 0.6rem;
+            color: #999;
+            line-height: 1.5;
+        }
+
+        /* BACK PANEL */
+        .back-panel {
+            width: 1440px;
+            margin: 20px auto 0;
+            background: var(--surface);
+            border: 1px solid var(--border-glow);
+            border-radius: 4px;
+            padding: 20px 28px;
+        }
+        .back-panel h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--neon);
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-glow);
+            text-shadow: 0 0 10px rgba(0,255,65,0.2);
+        }
+        .back-panel h2::before { content: '// '; color: var(--text-dim); }
+        .back-panel p { font-size: 0.68rem; color: #777; line-height: 1.8; }
+
+        @media print {
+            .toolbar { display: none; }
+            body { background: #fff; padding: 0; }
+            body::after { display: none; }
+            .page-header { display: none; }
+            .panel { background: #fff; }
+            .panel::before, .panel::after { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button onclick="downloadPNG()">Download PNG</button>
+        <button class="secondary" onclick="openPrintTiles()">Print Tiles</button>
+        <button class="secondary" onclick="window.print()">Print</button>
+    </div>
+
+    <div class="page-header">
+        <h1>Passion Project &mdash; The Algorithm</h1>
+    </div>
+
+    <div class="trifold-container" id="trifold">
+        <div class="trifold">
+            <!-- LEFT PANEL A -->
+            <div class="panel panel-left">
+                <span class="panel-label">Panel A</span>
+                <div class="panel-header">
+                    <h2>How It Works</h2>
+                </div>
+
+                <div class="hook-stat">
+                    <div class="number">7+ hrs</div>
+                    <div class="label">Average daily screen time for U.S. teens</div>
+                </div>
+
+                <div class="section">
+                    <h3>What Is a Recommendation Algorithm?</h3>
+                    <p>A recommendation algorithm is a set of mathematical rules that predicts what content you want to see next. Platforms like TikTok, Instagram, and YouTube analyze every tap, scroll, pause, and share to build a behavioral profile&mdash;then serve content engineered to keep you watching.</p>
+                </div>
+
+                <div class="section">
+                    <h3>Engagement Over Everything</h3>
+                    <p>Algorithms do not optimize for truth, quality, or well-being. They optimize for <em>engagement</em>&mdash;clicks, watch time, shares. Content that triggers outrage, fear, or curiosity gets amplified because emotional reactions keep users on-platform longer (Montag et al., 2019).</p>
+                </div>
+
+                <div class="section">
+                    <h3>The Attention Economy</h3>
+                    <p>Your attention is the product. Social media companies sell access to your eyeballs to advertisers. The longer you scroll, the more ads you see, the more revenue they generate. This is a $150+ billion industry built on capturing and holding human attention.</p>
+                </div>
+
+                <div class="thesis-box">
+                    <div class="label">&gt; Thesis_</div>
+                    <p>Social media algorithms are not neutral tools&mdash;they are engineered systems designed to maximize engagement at the cost of mental health, political polarization, and authentic human connection.</p>
+                </div>
+            </div>
+
+            <!-- CENTER PANEL B -->
+            <div class="panel panel-center">
+                <span class="panel-label">Panel B</span>
+
+                <div class="center-title">
+                    <span class="prefix">sys.exec &gt;&gt;</span>
+                    <h2>THE<br>ALGORITHM</h2>
+                    <div class="subtitle">How Social Media Controls You</div>
+                    <div class="author">Ethan Park</div>
+                    <div class="class-info">12 Honors English &middot; 2025</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-block">
+                        <div class="number">7+ hrs</div>
+                        <div class="label">Daily teen screen time average</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number">70%</div>
+                        <div class="label">YouTube watch time driven by algorithm</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number">64%</div>
+                        <div class="label">Extremist group joins led by algorithms</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number">$150B+</div>
+                        <div class="label">Annual social media ad revenue</div>
+                    </div>
+                </div>
+
+                <!-- SVG: Algorithmic Feed Network -->
+                <div class="svg-container">
+                    <svg viewBox="0 0 660 180" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Background -->
+                        <rect x="0" y="0" width="660" height="180" rx="4" fill="#050505" stroke="#0D2B0D" stroke-width="1"/>
+                        <!-- Title -->
+                        <text x="330" y="18" text-anchor="middle" fill="#6B6B6B" font-family="JetBrains Mono, monospace" font-size="7" letter-spacing="2">ALGORITHMIC FILTERING PIPELINE</text>
+                        <!-- Input content nodes (left) -->
+                        <text x="30" y="42" fill="#444" font-family="JetBrains Mono, monospace" font-size="6">INPUT STREAM</text>
+                        <rect x="15" y="50" width="80" height="18" rx="2" fill="none" stroke="#333" stroke-width="0.8"/><text x="55" y="62" text-anchor="middle" fill="#666" font-family="Inter, sans-serif" font-size="7">News Article</text>
+                        <rect x="15" y="72" width="80" height="18" rx="2" fill="none" stroke="#333" stroke-width="0.8"/><text x="55" y="84" text-anchor="middle" fill="#666" font-family="Inter, sans-serif" font-size="7">Friend's Post</text>
+                        <rect x="15" y="94" width="80" height="18" rx="2" fill="none" stroke="#333" stroke-width="0.8"/><text x="55" y="106" text-anchor="middle" fill="#666" font-family="Inter, sans-serif" font-size="7">Educational</text>
+                        <rect x="15" y="116" width="80" height="18" rx="2" fill="none" stroke="#FF003C" stroke-width="0.8" stroke-dasharray="2,2"/><text x="55" y="128" text-anchor="middle" fill="#FF003C" font-family="Inter, sans-serif" font-size="7">Rage Bait</text>
+                        <rect x="15" y="138" width="80" height="18" rx="2" fill="none" stroke="#FF003C" stroke-width="0.8" stroke-dasharray="2,2"/><text x="55" y="150" text-anchor="middle" fill="#FF003C" font-family="Inter, sans-serif" font-size="7">Clickbait</text>
+                        <rect x="15" y="160" width="80" height="18" rx="2" fill="none" stroke="#333" stroke-width="0.8"/><text x="55" y="172" text-anchor="middle" fill="#666" font-family="Inter, sans-serif" font-size="7">Local Event</text>
+                        <!-- Algorithm box (center) -->
+                        <rect x="190" y="55" width="120" height="90" rx="4" fill="rgba(0,255,65,0.05)" stroke="#00FF41" stroke-width="1"/>
+                        <text x="250" y="75" text-anchor="middle" fill="#00FF41" font-family="JetBrains Mono, monospace" font-size="8" font-weight="700">ALGORITHM</text>
+                        <text x="250" y="90" text-anchor="middle" fill="#00CC33" font-family="JetBrains Mono, monospace" font-size="6">engagement_score()</text>
+                        <text x="250" y="103" text-anchor="middle" fill="#00CC33" font-family="JetBrains Mono, monospace" font-size="6">predict_click()</text>
+                        <text x="250" y="116" text-anchor="middle" fill="#00CC33" font-family="JetBrains Mono, monospace" font-size="6">maximize_time()</text>
+                        <text x="250" y="129" text-anchor="middle" fill="#00CC33" font-family="JetBrains Mono, monospace" font-size="6">serve_ads()</text>
+                        <!-- Arrows: input to algorithm -->
+                        <line x1="95" y1="59" x2="190" y2="80" stroke="#333" stroke-width="0.5" opacity="0.4"/>
+                        <line x1="95" y1="81" x2="190" y2="90" stroke="#333" stroke-width="0.5" opacity="0.4"/>
+                        <line x1="95" y1="103" x2="190" y2="95" stroke="#333" stroke-width="0.5" opacity="0.4"/>
+                        <line x1="95" y1="125" x2="190" y2="105" stroke="#FF003C" stroke-width="0.8" opacity="0.7"/>
+                        <line x1="95" y1="147" x2="190" y2="115" stroke="#FF003C" stroke-width="0.8" opacity="0.7"/>
+                        <line x1="95" y1="169" x2="190" y2="125" stroke="#333" stroke-width="0.5" opacity="0.4"/>
+                        <!-- Output: Your Feed (right) -->
+                        <text x="420" y="42" fill="#444" font-family="JetBrains Mono, monospace" font-size="6">YOUR FEED</text>
+                        <rect x="405" y="50" width="105" height="22" rx="2" fill="rgba(255,0,60,0.1)" stroke="#FF003C" stroke-width="0.8"/><text x="457" y="64" text-anchor="middle" fill="#FF003C" font-family="Inter, sans-serif" font-size="7" font-weight="600">Rage Bait</text>
+                        <text x="520" y="64" fill="#FF003C" font-family="JetBrains Mono, monospace" font-size="6">98%</text>
+                        <rect x="405" y="76" width="105" height="22" rx="2" fill="rgba(255,0,60,0.06)" stroke="#FF003C" stroke-width="0.6"/><text x="457" y="90" text-anchor="middle" fill="#FF003C" font-family="Inter, sans-serif" font-size="7">Clickbait</text>
+                        <text x="520" y="90" fill="#FF003C" font-family="JetBrains Mono, monospace" font-size="6">91%</text>
+                        <rect x="405" y="102" width="105" height="22" rx="2" fill="rgba(0,255,65,0.03)" stroke="#333" stroke-width="0.5"/><text x="457" y="116" text-anchor="middle" fill="#888" font-family="Inter, sans-serif" font-size="7">Friend's Post</text>
+                        <text x="520" y="116" fill="#666" font-family="JetBrains Mono, monospace" font-size="6">34%</text>
+                        <rect x="405" y="128" width="105" height="22" rx="2" fill="rgba(0,255,65,0.02)" stroke="#222" stroke-width="0.5" opacity="0.5"/><text x="457" y="142" text-anchor="middle" fill="#555" font-family="Inter, sans-serif" font-size="7">News Article</text>
+                        <text x="520" y="142" fill="#444" font-family="JetBrains Mono, monospace" font-size="6">12%</text>
+                        <rect x="405" y="154" width="105" height="22" rx="2" fill="rgba(0,255,65,0.01)" stroke="#1A1A1A" stroke-width="0.5" opacity="0.3"/><text x="457" y="168" text-anchor="middle" fill="#444" font-family="Inter, sans-serif" font-size="7" opacity="0.5">Educational</text>
+                        <text x="520" y="168" fill="#333" font-family="JetBrains Mono, monospace" font-size="6">4%</text>
+                        <!-- Arrows: algorithm to output -->
+                        <line x1="310" y1="85" x2="405" y2="61" stroke="#FF003C" stroke-width="1" opacity="0.8"/>
+                        <line x1="310" y1="95" x2="405" y2="87" stroke="#FF003C" stroke-width="0.8" opacity="0.6"/>
+                        <line x1="310" y1="105" x2="405" y2="113" stroke="#333" stroke-width="0.5" opacity="0.4"/>
+                        <line x1="310" y1="115" x2="405" y2="139" stroke="#222" stroke-width="0.4" opacity="0.3"/>
+                        <line x1="310" y1="125" x2="405" y2="165" stroke="#1A1A1A" stroke-width="0.3" opacity="0.2"/>
+                        <!-- Engagement score label -->
+                        <text x="555" y="42" fill="#444" font-family="JetBrains Mono, monospace" font-size="5" letter-spacing="1">ENG. SCORE</text>
+                        <!-- Suppressed label -->
+                        <rect x="570" y="155" width="70" height="16" rx="2" fill="none" stroke="#333" stroke-width="0.5" stroke-dasharray="2,2"/>
+                        <text x="605" y="166" text-anchor="middle" fill="#444" font-family="JetBrains Mono, monospace" font-size="6">SUPPRESSED</text>
+                    </svg>
+                </div>
+
+                <div class="section">
+                    <h3>The Filter Bubble</h3>
+                    <p>Eli Pariser coined the term "filter bubble" in 2011 to describe how personalized algorithms create an invisible information cocoon. You only see content the algorithm thinks you agree with, progressively narrowing your worldview. Two people searching the same term on Google can get radically different results (Pariser, 2011). The algorithm does not show you the world&mdash;it shows you a reflection of your past behavior.</p>
+                </div>
+
+                <div class="compare-row">
+                    <div class="compare-box algo">
+                        <div class="box-title">Algorithmic Feed</div>
+                        <p>Content ranked by predicted engagement. Emotional, polarizing, and addictive content rises to the top.</p>
+                    </div>
+                    <div class="compare-box chrono">
+                        <div class="box-title">Chronological Feed</div>
+                        <p>Content shown in time order. You see everything from people you follow&mdash;no filtering, no manipulation.</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>The Dopamine Loop</h3>
+                    <p>Social media exploits the brain's dopamine system. Each notification, like, and new piece of content triggers a small dopamine release&mdash;the same neurotransmitter involved in gambling and substance addiction. The variable reward schedule (you never know what you will see next) makes the loop especially powerful (Montag et al., 2019).</p>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL C -->
+            <div class="panel panel-right">
+                <span class="panel-label">Panel C</span>
+                <div class="panel-header">
+                    <h2>Breaking Free</h2>
+                </div>
+
+                <div class="section">
+                    <h3>Mental Health Crisis</h3>
+                    <p>Since the rise of algorithm-driven social media around 2012, rates of teen anxiety, depression, and self-harm have surged. Adolescents who spend 3+ hours daily on social media face double the risk of depression (Haidt &amp; Twenge, 2023). The algorithm amplifies social comparison, FOMO, and a constant sense of inadequacy.</p>
+                </div>
+
+                <div class="section">
+                    <h3>Political Radicalization</h3>
+                    <p>YouTube's recommendation engine has been shown to systematically guide users toward increasingly extreme content. A 2020 study found that 64% of users who joined extremist groups on Facebook were led there by the platform's recommendation tools (Ribeiro et al., 2020). Algorithms do not radicalize people intentionally&mdash;but engagement optimization and radicalization produce the same outcome.</p>
+                </div>
+
+                <!-- SVG: Dopamine Loop Cycle -->
+                <div class="svg-container">
+                    <svg viewBox="0 0 310 160" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="310" height="160" rx="4" fill="#050505" stroke="#0D2B0D" stroke-width="1"/>
+                        <text x="155" y="16" text-anchor="middle" fill="#6B6B6B" font-family="JetBrains Mono, monospace" font-size="6" letter-spacing="2">DOPAMINE LOOP CYCLE</text>
+                        <!-- Circle nodes -->
+                        <circle cx="155" cy="42" r="18" fill="rgba(0,229,255,0.08)" stroke="#00E5FF" stroke-width="0.8"/>
+                        <text x="155" y="40" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono, monospace" font-size="5.5" font-weight="700">TRIGGER</text>
+                        <text x="155" y="48" text-anchor="middle" fill="#00B8D4" font-family="Inter, sans-serif" font-size="4.5">notification</text>
+
+                        <circle cx="260" cy="90" r="18" fill="rgba(0,255,65,0.08)" stroke="#00FF41" stroke-width="0.8"/>
+                        <text x="260" y="88" text-anchor="middle" fill="#00FF41" font-family="JetBrains Mono, monospace" font-size="5.5" font-weight="700">ACTION</text>
+                        <text x="260" y="96" text-anchor="middle" fill="#00CC33" font-family="Inter, sans-serif" font-size="4.5">open app</text>
+
+                        <circle cx="205" cy="140" r="18" fill="rgba(255,0,60,0.08)" stroke="#FF003C" stroke-width="0.8"/>
+                        <text x="205" y="138" text-anchor="middle" fill="#FF003C" font-family="JetBrains Mono, monospace" font-size="5" font-weight="700">VARIABLE</text>
+                        <text x="205" y="146" text-anchor="middle" fill="#FF003C" font-family="Inter, sans-serif" font-size="4.5">reward</text>
+
+                        <circle cx="105" cy="140" r="18" fill="rgba(0,255,65,0.05)" stroke="#00FF41" stroke-width="0.6"/>
+                        <text x="105" y="137" text-anchor="middle" fill="#00CC33" font-family="JetBrains Mono, monospace" font-size="4.5" font-weight="700">DOPAMINE</text>
+                        <text x="105" y="146" text-anchor="middle" fill="#00CC33" font-family="Inter, sans-serif" font-size="4.5">release</text>
+
+                        <circle cx="50" cy="90" r="18" fill="rgba(0,229,255,0.05)" stroke="#00E5FF" stroke-width="0.6"/>
+                        <text x="50" y="88" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono, monospace" font-size="5" font-weight="700">CRAVING</text>
+                        <text x="50" y="96" text-anchor="middle" fill="#00B8D4" font-family="Inter, sans-serif" font-size="4.5">repeat</text>
+
+                        <!-- Arrows connecting the cycle -->
+                        <path d="M 170 52 Q 220 55 248 76" fill="none" stroke="#444" stroke-width="0.8" marker-end="url(#arrow)"/>
+                        <path d="M 260 108 Q 245 125 220 133" fill="none" stroke="#444" stroke-width="0.8" marker-end="url(#arrow)"/>
+                        <path d="M 187 140 L 123 140" fill="none" stroke="#444" stroke-width="0.8" marker-end="url(#arrow)"/>
+                        <path d="M 90 132 Q 65 118 55 108" fill="none" stroke="#444" stroke-width="0.8" marker-end="url(#arrow)"/>
+                        <path d="M 55 72 Q 80 50 138 38" fill="none" stroke="#444" stroke-width="0.8" marker-end="url(#arrow)"/>
+                        <defs>
+                            <marker id="arrow" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                                <path d="M 0 0 L 6 3 L 0 6 z" fill="#666"/>
+                            </marker>
+                        </defs>
+                        <!-- Center label -->
+                        <text x="155" y="98" text-anchor="middle" fill="#333" font-family="JetBrains Mono, monospace" font-size="5" font-weight="700" letter-spacing="1">INFINITE</text>
+                        <text x="155" y="106" text-anchor="middle" fill="#333" font-family="JetBrains Mono, monospace" font-size="5" letter-spacing="1">SCROLL</text>
+                    </svg>
+                </div>
+
+                <div class="section">
+                    <h3>What You Can Do</h3>
+                    <ul>
+                        <li>Switch to chronological feeds whenever platforms allow it</li>
+                        <li>Set daily screen time limits and enforce them</li>
+                        <li>Deliberately follow accounts that challenge your views</li>
+                        <li>Turn off non-essential notifications</li>
+                        <li>Audit your feed: is this what you chose, or what the algorithm chose?</li>
+                    </ul>
+                </div>
+
+                <div class="quote-block">
+                    <p>If you're not paying for the product, you are the product. And now that means your attention, your behavior, your psychology.</p>
+                    <div class="attribution">&mdash; Tristan Harris, The Social Dilemma (2019)</div>
+                </div>
+
+                <div class="section">
+                    <h3>The Takeaway</h3>
+                    <p>Algorithms are not going away. But awareness is the first step to reclaiming agency. Understanding how these systems work&mdash;and whose interests they serve&mdash;empowers you to scroll with intention instead of compulsion.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-panel">
+        <h2>Works Cited</h2>
+        <p>
+            1. Pariser, Eli. <em>The Filter Bubble: How the New Personalized Web Is Changing What We Read and How We Think</em>. Penguin, 2011.<br>
+            2. Haidt, Jonathan, and Jean M. Twenge. "Adolescent Mood Disorders Since 2010: A Collaborative Review." Unpublished manuscript, New York University, 2023.<br>
+            3. Common Sense Media. <em>Media Use by Tweens and Teens, 2023: A Common Sense Census</em>. Common Sense Media, 2023.<br>
+            4. Ribeiro, Manoel Horta, et al. "Auditing Radicalization Pathways on YouTube." <em>Proceedings of the 2020 Conference on Fairness, Accountability, and Transparency</em>, Association for Computing Machinery, 2020, pp. 131&ndash;141.<br>
+            5. Harris, Tristan. "Testimony before the U.S. Senate Commerce Committee on Persuasive Technology." U.S. Senate Committee on Commerce, Science, and Transportation, 25 June 2019.<br>
+            6. Montag, Christian, et al. "Addictive Features of Social Media/Messenger Platforms and Freemium Games against the Background of Psychological and Economic Theories." <em>International Journal of Environmental Research and Public Health</em>, vol. 16, no. 14, 2019, article 2612.<br>
+        </p>
+    </div>
+
+    <script>
+        async function downloadPNG() {
+            const el = document.getElementById('trifold');
+            const capture = async () => {
+                return await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#0A0A0A', width: 1440, windowWidth: 1440 });
+            };
+            const canvas = window.forceDesktopForCapture ? await forceDesktopForCapture(capture) : await capture();
+            const link = document.createElement('a');
+            link.download = 'algorithm-social-media-trifold.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
