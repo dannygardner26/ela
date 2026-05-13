@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="/print-tiles.js" defer></script>
     <style>
         :root {
             --gold: #FFD700;
@@ -264,6 +265,54 @@
         }
         .back-panel p { font-size: 0.68rem; color: #999; line-height: 1.8; }
 
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            body {
+                min-width: unset;
+                padding: 16px 10px;
+                overflow-x: hidden;
+            }
+            .toolbar {
+                position: fixed;
+                top: auto;
+                bottom: 12px;
+                right: 12px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                max-width: 60vw;
+            }
+            .toolbar button { font-size: 0.65rem; padding: 6px 10px; }
+            .page-header h1 { font-size: 0.7rem; letter-spacing: 2px; }
+            .trifold-container { width: 100%; }
+            .trifold {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                grid-template-columns: unset;
+            }
+            .panel {
+                padding: 24px 18px;
+                border-right: none !important;
+                border-left: none !important;
+                border-bottom: 1px solid var(--border);
+            }
+            .panel-label { display: none; }
+            .panel-header h2 { font-size: 1.1rem; }
+            .center-title h2 { font-size: 1.8rem; }
+            .center-title .byline { font-size: 0.75rem; }
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .stat-block .number { font-size: 1.5rem; }
+            .section p { font-size: 0.8rem; }
+            .section li { font-size: 0.8rem; }
+            .thesis-box p { font-size: 0.75rem; }
+            .back-panel {
+                width: 100%;
+                padding: 16px 18px;
+                margin-top: 12px;
+            }
+            .back-panel p { font-size: 0.65rem; }
+        }
+
         @media print {
             .toolbar { display: none; }
             body { background: #fff; padding: 0; }
@@ -277,6 +326,7 @@
 <body>
     <div class="toolbar">
         <button onclick="downloadPNG()">Download PNG</button>
+        <button class="secondary" onclick="openPrintTiles()">Print Tiles</button>
         <button class="secondary" onclick="window.print()">Print</button>
         <button class="secondary" onclick="copyLink()">Copy Path</button>
     </div>
@@ -410,7 +460,10 @@
     <script>
         async function downloadPNG() {
             const el = document.getElementById('trifold');
-            const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#0d0d0d' });
+            const capture = async () => {
+                return await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#0d0d0d', width: 1440, windowWidth: 1440 });
+            };
+            const canvas = window.forceDesktopForCapture ? await forceDesktopForCapture(capture) : await capture();
             const link = document.createElement('a');
             link.download = 'lebron-goat-trifold.png';
             link.href = canvas.toDataURL('image/png');

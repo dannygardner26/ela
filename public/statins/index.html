@@ -8,25 +8,34 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="/print-tiles.js" defer></script>
     <style>
         :root {
-            --navy: #0A1628;
-            --navy-light: #122240;
-            --blue: #1565A8;
-            --blue-bright: #2196F3;
-            --blue-dim: #1E3A5F;
+            --navy: #060E1B;
+            --navy-mid: #0B1929;
+            --surface: #0D1F3C;
+            --surface-light: #122D52;
+            --surface-glow: #163561;
+            --blue: #1976D2;
+            --blue-bright: #42A5F5;
+            --blue-glow: #64B5F6;
             --teal: #00BFA5;
-            --teal-dim: #00897B;
-            --red-accent: #EF5350;
-            --orange: #FF9800;
-            --yellow: #FFEB3B;
+            --teal-dim: #009688;
+            --teal-glow: rgba(0, 191, 165, 0.15);
+            --red: #EF5350;
+            --red-dim: rgba(239, 83, 80, 0.12);
+            --orange: #FFA726;
+            --orange-dim: rgba(255, 167, 38, 0.12);
             --green: #66BB6A;
-            --surface: #0E1D35;
-            --surface-light: #152A4A;
+            --green-dim: rgba(102, 187, 106, 0.12);
+            --yellow: #FFEE58;
             --text: #F0F4F8;
-            --text-dim: #8BA3C4;
-            --border: #1E3A5F;
-            --gradient: linear-gradient(135deg, var(--blue), var(--teal));
+            --text-mid: #B0BEC5;
+            --text-dim: #607D8B;
+            --border: rgba(255,255,255,0.06);
+            --border-bright: rgba(255,255,255,0.1);
+            --glass: rgba(13, 31, 60, 0.6);
+            --glass-border: rgba(255,255,255,0.08);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -48,20 +57,21 @@
             z-index: 1000;
         }
         .toolbar button {
-            background: var(--blue);
+            background: linear-gradient(135deg, var(--blue), var(--teal));
             color: #fff;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 8px 18px;
+            border-radius: 8px;
             font-family: 'Inter', sans-serif;
             font-size: 0.72rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            letter-spacing: 0.3px;
         }
-        .toolbar button:hover { background: var(--blue-bright); transform: translateY(-1px); }
-        .toolbar button.secondary { background: var(--surface-light); color: var(--text); border: 1px solid var(--border); }
-        .toolbar button.secondary:hover { background: var(--border); }
+        .toolbar button:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(25, 118, 210, 0.4); }
+        .toolbar button.secondary { background: var(--surface-light); border: 1px solid var(--glass-border); }
+        .toolbar button.secondary:hover { background: var(--surface-glow); }
 
         .page-header {
             text-align: center;
@@ -69,153 +79,167 @@
         }
         .page-header h1 {
             font-family: 'Manrope', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-dim);
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             font-weight: 400;
         }
 
-        .trifold-container {
-            width: 1440px;
-            margin: 0 auto;
-        }
+        .trifold-container { width: 1440px; margin: 0 auto; }
         .trifold {
             display: grid;
             grid-template-columns: 360px 720px 360px;
             width: 1440px;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 0 80px rgba(21, 101, 168, 0.08), 0 20px 60px rgba(0,0,0,0.6);
+            box-shadow: 0 0 120px rgba(25, 118, 210, 0.06), 0 40px 80px rgba(0,0,0,0.5);
         }
+
         .panel {
-            background: var(--surface);
-            padding: 28px 22px;
+            background: var(--navy-mid);
+            padding: 26px 20px;
             display: flex;
             flex-direction: column;
             position: relative;
+            overflow: hidden;
         }
         .panel::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gradient);
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue), var(--teal), var(--blue));
         }
-        .panel-left { border-right: 1px solid var(--border); }
-        .panel-right { border-left: 1px solid var(--border); }
+        .panel-left {
+            border-right: 1px solid var(--border);
+            background: linear-gradient(180deg, var(--navy-mid) 0%, rgba(13,31,60,0.3) 100%);
+        }
+        .panel-center {
+            background: linear-gradient(180deg, #0D1F3C 0%, #091525 50%, #0D1F3C 100%);
+        }
+        .panel-right {
+            border-left: 1px solid var(--border);
+            background: linear-gradient(180deg, var(--navy-mid) 0%, rgba(13,31,60,0.3) 100%);
+        }
 
         .panel-label {
             position: absolute;
-            top: 14px;
-            right: 12px;
-            font-size: 0.5rem;
+            top: 12px; right: 12px;
+            font-size: 0.48rem;
             color: var(--text-dim);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            opacity: 0.5;
+            letter-spacing: 2px;
+            opacity: 0.4;
         }
 
+        .panel-header { margin-bottom: 16px; }
         .panel-header h2 {
             font-family: 'Manrope', sans-serif;
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             font-weight: 800;
-            color: var(--blue-bright);
-            margin-bottom: 14px;
+            letter-spacing: -0.2px;
+            background: linear-gradient(135deg, var(--blue-bright), var(--teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--border);
         }
 
-        .section { margin-bottom: 14px; }
+        .section { margin-bottom: 12px; }
         .section h3 {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.62rem;
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.58rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 2px;
             color: var(--teal);
             margin-bottom: 6px;
             font-weight: 700;
         }
         .section p {
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             line-height: 1.6;
-            color: #ccd6e4;
+            color: var(--text-mid);
         }
+        .section p strong { color: var(--text); font-weight: 600; }
         .section ul { list-style: none; padding: 0; }
         .section li {
-            font-size: 0.72rem;
-            line-height: 1.5;
-            color: #ccd6e4;
-            padding-left: 14px;
-            margin-bottom: 4px;
+            font-size: 0.7rem;
+            line-height: 1.55;
+            color: var(--text-mid);
+            padding-left: 16px;
+            margin-bottom: 5px;
             position: relative;
         }
         .section li::before {
-            content: '+';
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: var(--blue-bright);
-            font-weight: 700;
-            font-size: 0.7rem;
-        }
-
-        .cross-icon {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            position: relative;
-            vertical-align: middle;
-            margin-right: 4px;
-        }
-        .cross-icon::before, .cross-icon::after {
             content: '';
             position: absolute;
-            background: var(--blue-bright);
-            border-radius: 1px;
-        }
-        .cross-icon::before {
-            width: 4px;
-            height: 14px;
-            top: 0;
-            left: 5px;
-        }
-        .cross-icon::after {
-            width: 14px;
-            height: 4px;
-            top: 5px;
-            left: 0;
+            left: 0; top: 7px;
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--teal));
         }
 
+        /* IMAGE FRAMES */
+        .img-frame {
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+            border: 1px solid var(--border-bright);
+            position: relative;
+        }
+        .img-frame img {
+            width: 100%;
+            display: block;
+        }
+
+        /* SVG ILLUSTRATIONS */
+        .svg-illustration {
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+            border: 1px solid var(--border-bright);
+            background: linear-gradient(135deg, rgba(25,118,210,0.05), rgba(0,191,165,0.05));
+        }
+
+        /* STAT BLOCKS */
         .stat-block {
-            background: var(--surface-light);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 14px;
-            margin: 6px 0;
+            background: linear-gradient(135deg, var(--surface), var(--surface-light));
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 14px 12px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-block::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at center, rgba(25,118,210,0.04) 0%, transparent 70%);
+            pointer-events: none;
         }
         .stat-block .number {
             font-family: 'Manrope', sans-serif;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 800;
             line-height: 1;
+            position: relative;
         }
-        .stat-block .number.red { color: var(--red-accent); }
-        .stat-block .number.orange { color: var(--orange); }
-        .stat-block .number.green { color: var(--green); }
-        .stat-block .number.teal { color: var(--teal); }
-        .stat-block .number.blue { color: var(--blue-bright); }
-        .stat-block .number.yellow { color: var(--yellow); }
+        .stat-block .number.blue { color: var(--blue-bright); text-shadow: 0 0 30px rgba(66,165,245,0.3); }
+        .stat-block .number.red { color: var(--red); text-shadow: 0 0 30px rgba(239,83,80,0.3); }
+        .stat-block .number.orange { color: var(--orange); text-shadow: 0 0 30px rgba(255,167,38,0.3); }
+        .stat-block .number.green { color: var(--green); text-shadow: 0 0 30px rgba(102,187,106,0.3); }
+        .stat-block .number.teal { color: var(--teal); text-shadow: 0 0 30px rgba(0,191,165,0.3); }
         .stat-block .label {
-            font-size: 0.58rem;
+            font-size: 0.55rem;
             color: var(--text-dim);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-top: 4px;
+            margin-top: 6px;
             line-height: 1.3;
+            position: relative;
         }
 
         .stats-row {
@@ -231,47 +255,112 @@
             margin: 10px 0;
         }
 
+        /* PATHWAY STEPS */
+        .pathway {
+            position: relative;
+            margin: 8px 0 12px;
+            padding-left: 18px;
+        }
+        .pathway::before {
+            content: '';
+            position: absolute;
+            left: 5px; top: 8px; bottom: 8px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--blue), var(--teal));
+            border-radius: 1px;
+        }
         .pathway-step {
-            background: var(--surface-light);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--blue-bright);
-            border-radius: 0 6px 6px 0;
-            padding: 8px 12px;
-            margin: 5px 0;
+            position: relative;
+            background: var(--surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 9px 12px;
+            margin: 6px 0;
+        }
+        .pathway-step::before {
+            content: '';
+            position: absolute;
+            left: -18px; top: 14px;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: var(--navy-mid);
+            border: 2px solid var(--blue-bright);
+            box-shadow: 0 0 8px rgba(66,165,245,0.4);
         }
         .pathway-step .step-num {
             font-family: 'Manrope', sans-serif;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             font-weight: 800;
-            color: var(--teal);
+            color: var(--blue-bright);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
         .pathway-step p {
-            font-size: 0.68rem;
+            font-size: 0.66rem;
             line-height: 1.45;
-            color: #ccd6e4;
+            color: var(--text-mid);
             margin-top: 2px;
         }
 
-        .research-box {
-            background: rgba(21, 101, 168, 0.1);
-            border: 1px solid rgba(21, 101, 168, 0.3);
+        /* TABLES */
+        .table-mini {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 8px 0;
+            font-size: 0.6rem;
             border-radius: 8px;
-            padding: 12px 14px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+        }
+        .table-mini th {
+            background: linear-gradient(135deg, var(--blue), rgba(25,118,210,0.8));
+            color: #fff;
+            padding: 8px 10px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.55rem;
+        }
+        .table-mini td {
+            padding: 7px 10px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-mid);
+            background: var(--surface);
+        }
+        .table-mini tr:last-child td { border-bottom: none; }
+        .table-mini tr:nth-child(even) td { background: rgba(25,118,210,0.04); }
+
+        /* RESEARCH BOX */
+        .research-box {
+            background: linear-gradient(135deg, rgba(0,191,165,0.06), rgba(25,118,210,0.06));
+            border: 1px solid rgba(0,191,165,0.2);
+            border-radius: 10px;
+            padding: 14px 16px;
             margin: 10px 0;
+            position: relative;
+        }
+        .research-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--teal), var(--blue));
+            border-radius: 10px 0 0 10px;
         }
         .research-box .label {
             font-family: 'Manrope', sans-serif;
             font-size: 0.55rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--blue-bright);
-            margin-bottom: 4px;
+            letter-spacing: 2.5px;
+            color: var(--teal);
+            margin-bottom: 6px;
             font-weight: 700;
         }
-        .research-box p { font-size: 0.68rem; line-height: 1.5; color: #ccd6e4; }
+        .research-box p { font-size: 0.68rem; line-height: 1.55; color: var(--text-mid); }
 
+        /* BENEFIT / RISK */
         .benefit-risk {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -279,117 +368,246 @@
             margin: 10px 0;
         }
         .benefit-box, .risk-box {
-            border-radius: 6px;
-            padding: 10px 12px;
+            border-radius: 10px;
+            padding: 12px 14px;
+            position: relative;
+            overflow: hidden;
         }
         .benefit-box {
-            background: rgba(102, 187, 106, 0.08);
-            border: 1px solid rgba(102, 187, 106, 0.3);
+            background: linear-gradient(135deg, rgba(102,187,106,0.06), rgba(102,187,106,0.02));
+            border: 1px solid rgba(102,187,106,0.2);
+        }
+        .benefit-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: var(--green);
         }
         .benefit-box h4 {
-            font-size: 0.6rem;
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.55rem;
             color: var(--green);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
             font-weight: 700;
         }
         .risk-box {
-            background: rgba(239, 83, 80, 0.08);
-            border: 1px solid rgba(239, 83, 80, 0.3);
+            background: linear-gradient(135deg, rgba(239,83,80,0.06), rgba(239,83,80,0.02));
+            border: 1px solid rgba(239,83,80,0.2);
+        }
+        .risk-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: var(--red);
         }
         .risk-box h4 {
-            font-size: 0.6rem;
-            color: var(--red-accent);
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.55rem;
+            color: var(--red);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
             font-weight: 700;
         }
-        .benefit-box li::before { color: var(--green) !important; content: '\2713' !important; }
-        .risk-box li::before { color: var(--red-accent) !important; content: '!' !important; }
+        .br-list { list-style: none; padding: 0; }
+        .br-list li {
+            font-size: 0.63rem;
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 4px;
+            color: var(--text-mid);
+            line-height: 1.4;
+        }
+        .benefit-box .br-list li::before {
+            content: '\2713';
+            position: absolute; left: 0; top: 0;
+            color: var(--green);
+            font-weight: 700;
+            font-size: 0.6rem;
+        }
+        .risk-box .br-list li::before {
+            content: '\26A0';
+            position: absolute; left: 0; top: 0;
+            color: var(--red);
+            font-size: 0.55rem;
+        }
 
-        .table-mini {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 8px 0;
-            font-size: 0.62rem;
-        }
-        .table-mini th {
-            background: var(--blue);
-            color: #fff;
-            padding: 6px 8px;
-            text-align: left;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .table-mini td {
-            padding: 5px 8px;
-            border-bottom: 1px solid var(--border);
-            color: #ccd6e4;
-        }
-        .table-mini tr:nth-child(even) td { background: rgba(21, 101, 168, 0.06); }
-
-        /* CENTER */
+        /* CENTER PANEL */
         .center-title {
             text-align: center;
-            margin-bottom: 18px;
-            padding-bottom: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
             border-bottom: 1px solid var(--border);
+            position: relative;
         }
         .center-title h2 {
             font-family: 'Manrope', sans-serif;
-            font-size: 2.1rem;
+            font-size: 2.4rem;
             font-weight: 800;
-            background: var(--gradient);
+            background: linear-gradient(135deg, var(--blue-glow), #fff, var(--teal));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            line-height: 1.15;
+            line-height: 1.1;
+            letter-spacing: -1px;
         }
         .center-title .byline {
             font-size: 0.78rem;
             color: var(--text-dim);
-            margin-top: 6px;
+            margin-top: 8px;
             font-style: italic;
         }
         .center-title .author {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            color: var(--text-dim);
-            margin-top: 8px;
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.65rem;
+            color: var(--text-mid);
+            margin-top: 10px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             font-weight: 600;
         }
         .center-title .class-info {
-            font-size: 0.55rem;
+            font-size: 0.52rem;
             color: var(--text-dim);
             margin-top: 4px;
-            letter-spacing: 0.5px;
-            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+
+        /* HERO IMAGE AREA */
+        .hero-visual {
+            position: relative;
+            margin: 0 -20px 16px;
+            padding: 0;
+            overflow: hidden;
+        }
+        .hero-visual svg { width: 100%; display: block; }
+
+        /* MECHANISM VISUAL */
+        .mechanism-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .mechanism-card {
+            background: var(--surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .mechanism-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue), var(--teal));
+        }
+        .mechanism-card .num {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--blue-bright), var(--teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+        .mechanism-card .title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--teal);
+            margin: 4px 0;
+            font-weight: 700;
+        }
+        .mechanism-card p {
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            line-height: 1.4;
         }
 
         /* BACK */
         .back-panel {
             width: 1440px;
             margin: 20px auto 0;
-            background: var(--surface);
+            background: var(--navy-mid);
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 20px 28px;
         }
         .back-panel h2 {
             font-family: 'Manrope', sans-serif;
             font-size: 0.85rem;
-            color: var(--blue-bright);
+            background: linear-gradient(135deg, var(--blue-bright), var(--teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             letter-spacing: 0.5px;
             margin-bottom: 10px;
             padding-bottom: 8px;
             border-bottom: 1px solid var(--border);
             font-weight: 700;
         }
-        .back-panel p { font-size: 0.62rem; color: var(--text-dim); line-height: 1.9; }
+        .back-panel p { font-size: 0.6rem; color: var(--text-dim); line-height: 2; }
+        .back-panel em { color: var(--text-mid); }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            body {
+                min-width: unset;
+                padding: 16px 10px;
+                overflow-x: hidden;
+            }
+            .toolbar {
+                position: fixed;
+                top: auto;
+                bottom: 12px;
+                right: 12px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                max-width: 50vw;
+            }
+            .toolbar button { font-size: 0.65rem; padding: 6px 12px; }
+            .page-header h1 { font-size: 0.7rem; letter-spacing: 2px; }
+            .trifold-container { width: 100%; }
+            .trifold {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                grid-template-columns: unset;
+            }
+            .panel {
+                padding: 24px 18px;
+                border-right: none !important;
+                border-left: none !important;
+                border-bottom: 1px solid var(--border);
+            }
+            .panel-label { display: none; }
+            .panel-header h2 { font-size: 1.1rem; }
+            .center-title h2 { font-size: 1.8rem; }
+            .center-title .byline { font-size: 0.75rem; }
+            .hero-visual { margin: 0 -18px 16px; }
+            .mechanism-grid { grid-template-columns: 1fr 1fr; }
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .stats-row-4 { grid-template-columns: 1fr 1fr; }
+            .benefit-risk { grid-template-columns: 1fr; }
+            .section p { font-size: 0.8rem; }
+            .section li { font-size: 0.8rem; }
+            .stat-block .number { font-size: 1.5rem; }
+            .table-mini { font-size: 0.7rem; }
+            .table-mini th { font-size: 0.6rem; }
+            .back-panel {
+                width: 100%;
+                padding: 16px 18px;
+                margin-top: 12px;
+            }
+            .back-panel p { font-size: 0.65rem; }
+        }
 
         @media print {
             .toolbar { display: none; }
@@ -403,129 +621,268 @@
 <body>
     <div class="toolbar">
         <button onclick="downloadPNG()">Download PNG</button>
+        <button class="secondary" onclick="openPrintTiles()">Print Tiles</button>
         <button class="secondary" onclick="window.print()">Print</button>
     </div>
 
     <div class="page-header">
-        <h1>Allied Health Presentation &mdash; Statins and Heart Health</h1>
+        <h1>Allied Health &mdash; Statins and Heart Health</h1>
     </div>
 
     <div class="trifold-container" id="trifold">
         <div class="trifold">
+
             <!-- LEFT PANEL A -->
             <div class="panel panel-left">
                 <span class="panel-label">Panel A</span>
                 <div class="panel-header">
-                    <h2><span class="cross-icon"></span> Background</h2>
+                    <h2>Background &amp; Context</h2>
                 </div>
 
                 <div class="section">
                     <h3>Research Question</h3>
-                    <p>How do statins affect LDL cholesterol levels and cardiovascular event risk in patients aged 40&ndash;75 years old?</p>
+                    <p><strong>How do statins affect LDL cholesterol levels and cardiovascular event risk</strong> in patients aged 40&ndash;75 years old?</p>
                 </div>
 
                 <div class="section">
                     <h3>Why This Matters</h3>
-                    <p>Heart disease is the leading cause of death for both men and women, causing 1 in every 3 deaths in the United States. An estimated 920,000 lives were lost to cardiovascular disease in 2023, with $417.9 billion in associated healthcare costs (Centers for Disease Control and Prevention [CDC], 2024).</p>
+                    <p>Heart disease is the <strong>leading cause of death</strong> for both men and women, causing 1 in every 3 deaths in the United States.</p>
                 </div>
+
+                <div class="stats-row">
+                    <div class="stat-block">
+                        <div class="number red">920K</div>
+                        <div class="label">Lives Lost to CVD<br>in 2023</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number orange">$417.9B</div>
+                        <div class="label">Annual Healthcare<br>Costs</div>
+                    </div>
+                </div>
+                <p style="font-size: 0.5rem; color: var(--text-dim); margin-bottom: 8px;">(Centers for Disease Control and Prevention [CDC], 2024)</p>
 
                 <div class="section">
                     <h3>What Is LDL Cholesterol?</h3>
-                    <p>LDL (low-density lipoprotein) is a particle in the blood made up of lipids and proteins that carries fats through the bloodstream. Elevated LDL leads to plaque buildup in arteries (atherosclerosis), increasing risk of coronary artery disease, stroke, and heart attack (Cleveland Clinic, 2024).</p>
+                    <p>LDL (low-density lipoprotein) carries fats through the bloodstream. Elevated LDL leads to <strong>plaque buildup in arteries</strong> (atherosclerosis), increasing risk of coronary artery disease, stroke, and heart attack.</p>
                 </div>
 
-                <table class="table-mini">
-                    <tr><th>LDL-C (mg/dL)</th><th>Classification</th></tr>
-                    <tr><td>&lt; 100</td><td>Optimal</td></tr>
-                    <tr><td>100&ndash;129</td><td>Near Optimal</td></tr>
-                    <tr><td>130&ndash;159</td><td>Borderline High</td></tr>
-                    <tr><td>160&ndash;189</td><td>High</td></tr>
-                    <tr><td>&ge; 190</td><td>Very High</td></tr>
-                </table>
+                <!-- Artery SVG Illustration -->
+                <div class="svg-illustration">
+                    <svg viewBox="0 0 320 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="arteryGrad" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#EF5350" stop-opacity="0.3"/>
+                                <stop offset="50%" stop-color="#EF5350" stop-opacity="0.5"/>
+                                <stop offset="100%" stop-color="#EF5350" stop-opacity="0.3"/>
+                            </linearGradient>
+                            <linearGradient id="plaqueGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#FFA726"/>
+                                <stop offset="100%" stop-color="#FF7043"/>
+                            </linearGradient>
+                            <linearGradient id="bloodGrad" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#E53935" stop-opacity="0"/>
+                                <stop offset="30%" stop-color="#E53935" stop-opacity="0.6"/>
+                                <stop offset="70%" stop-color="#E53935" stop-opacity="0.6"/>
+                                <stop offset="100%" stop-color="#E53935" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="320" height="100" fill="#060E1B"/>
+                        <!-- Healthy artery -->
+                        <text x="55" y="14" fill="#607D8B" font-size="7" font-family="Manrope,sans-serif" text-anchor="middle" font-weight="600" letter-spacing="1">HEALTHY</text>
+                        <ellipse cx="55" cy="55" rx="38" ry="34" fill="none" stroke="#EF5350" stroke-width="5" stroke-opacity="0.3"/>
+                        <ellipse cx="55" cy="55" rx="28" ry="24" fill="#E53935" fill-opacity="0.15"/>
+                        <circle cx="42" cy="48" r="2" fill="#E53935" fill-opacity="0.5"/>
+                        <circle cx="58" cy="60" r="1.5" fill="#E53935" fill-opacity="0.4"/>
+                        <circle cx="50" cy="55" r="2.5" fill="#E53935" fill-opacity="0.3"/>
+                        <circle cx="65" cy="50" r="1.5" fill="#E53935" fill-opacity="0.5"/>
+                        <!-- Arrow -->
+                        <path d="M100 55 L120 55" stroke="#42A5F5" stroke-width="1.5" stroke-dasharray="3,3"/>
+                        <polygon points="122,55 118,52 118,58" fill="#42A5F5"/>
+                        <!-- Building plaque -->
+                        <text x="160" y="14" fill="#607D8B" font-size="7" font-family="Manrope,sans-serif" text-anchor="middle" font-weight="600" letter-spacing="1">BUILDUP</text>
+                        <ellipse cx="160" cy="55" rx="38" ry="34" fill="none" stroke="#EF5350" stroke-width="5" stroke-opacity="0.3"/>
+                        <path d="M130 35 Q140 45 135 55 Q130 65 138 75" fill="#FFA726" fill-opacity="0.5" stroke="#FF7043" stroke-width="0.5"/>
+                        <path d="M182 30 Q175 42 180 55 Q185 68 178 80" fill="#FFA726" fill-opacity="0.4" stroke="#FF7043" stroke-width="0.5"/>
+                        <ellipse cx="160" cy="55" rx="20" ry="16" fill="#E53935" fill-opacity="0.12"/>
+                        <circle cx="150" cy="50" r="1.5" fill="#E53935" fill-opacity="0.4"/>
+                        <circle cx="165" cy="58" r="2" fill="#E53935" fill-opacity="0.3"/>
+                        <!-- Arrow -->
+                        <path d="M205 55 L225 55" stroke="#42A5F5" stroke-width="1.5" stroke-dasharray="3,3"/>
+                        <polygon points="227,55 223,52 223,58" fill="#42A5F5"/>
+                        <!-- Blocked -->
+                        <text x="265" y="14" fill="#EF5350" font-size="7" font-family="Manrope,sans-serif" text-anchor="middle" font-weight="600" letter-spacing="1">BLOCKED</text>
+                        <ellipse cx="265" cy="55" rx="38" ry="34" fill="none" stroke="#EF5350" stroke-width="5" stroke-opacity="0.3"/>
+                        <path d="M235 28 Q250 40 240 55 Q235 65 245 80" fill="#FFA726" fill-opacity="0.7" stroke="#FF7043" stroke-width="0.5"/>
+                        <path d="M295 28 Q280 42 290 55 Q295 65 285 80" fill="#FFA726" fill-opacity="0.7" stroke="#FF7043" stroke-width="0.5"/>
+                        <path d="M250 35 Q260 45 255 55 Q250 65 258 75" fill="#FFA726" fill-opacity="0.5"/>
+                        <path d="M278 32 Q272 44 276 55 Q280 66 274 78" fill="#FFA726" fill-opacity="0.4"/>
+                        <ellipse cx="265" cy="55" rx="8" ry="6" fill="#E53935" fill-opacity="0.2"/>
+                    </svg>
+                </div>
 
                 <div class="section">
-                    <h3>The Disease Pathway</h3>
+                    <h3>LDL Classification</h3>
                 </div>
-                <div class="pathway-step">
-                    <div class="step-num">Step 1</div>
-                    <p>Excessive LDL particles circulate in the blood</p>
-                </div>
-                <div class="pathway-step">
-                    <div class="step-num">Step 2</div>
-                    <p>LDL cholesterol is oxidized, acting abnormally in the body</p>
-                </div>
-                <div class="pathway-step">
-                    <div class="step-num">Step 3</div>
-                    <p>Oxidized LDL disrupts endothelium function, forms deposits, triggers inflammation</p>
-                </div>
-                <div class="pathway-step">
-                    <div class="step-num">Step 4</div>
-                    <p>Vessel tears or becomes blocked &mdash; heart attack, stroke, or blood clot</p>
-                </div>
+                <table class="table-mini">
+                    <tr><th>LDL-C (mg/dL)</th><th>Classification</th></tr>
+                    <tr><td>&lt; 100</td><td style="color: var(--green);">Optimal</td></tr>
+                    <tr><td>100&ndash;129</td><td style="color: var(--teal);">Near Optimal</td></tr>
+                    <tr><td>130&ndash;159</td><td style="color: var(--orange);">Borderline High</td></tr>
+                    <tr><td>160&ndash;189</td><td style="color: var(--red);">High</td></tr>
+                    <tr><td>&ge; 190</td><td style="color: #FF5252; font-weight: 600;">Very High</td></tr>
+                </table>
             </div>
 
             <!-- CENTER PANEL B -->
             <div class="panel panel-center">
                 <span class="panel-label">Panel B</span>
 
+                <!-- Hero Visual -->
+                <div class="hero-visual">
+                    <svg viewBox="0 0 720 180" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="heartGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#1976D2" stop-opacity="0.2"/>
+                                <stop offset="60%" stop-color="#1976D2" stop-opacity="0.05"/>
+                                <stop offset="100%" stop-color="#1976D2" stop-opacity="0"/>
+                            </radialGradient>
+                            <linearGradient id="heartFill" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#EF5350" stop-opacity="0.8"/>
+                                <stop offset="100%" stop-color="#C62828" stop-opacity="0.9"/>
+                            </linearGradient>
+                            <linearGradient id="vesselGrad" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#42A5F5" stop-opacity="0"/>
+                                <stop offset="20%" stop-color="#42A5F5" stop-opacity="0.6"/>
+                                <stop offset="80%" stop-color="#00BFA5" stop-opacity="0.6"/>
+                                <stop offset="100%" stop-color="#00BFA5" stop-opacity="0"/>
+                            </linearGradient>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="blur"/>
+                                <feMerge>
+                                    <feMergeNode in="blur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <rect width="720" height="180" fill="transparent"/>
+                        <!-- Glow behind heart -->
+                        <circle cx="360" cy="90" r="80" fill="url(#heartGlow)"/>
+                        <!-- Vessel lines -->
+                        <path d="M80 90 Q180 60 280 85" stroke="url(#vesselGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <path d="M440 85 Q540 60 640 90" stroke="url(#vesselGrad)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                        <path d="M100 110 Q200 140 280 105" stroke="url(#vesselGrad)" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+                        <path d="M440 105 Q520 140 620 110" stroke="url(#vesselGrad)" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+                        <!-- Pulse dots on vessels -->
+                        <circle cx="180" cy="72" r="2" fill="#42A5F5" opacity="0.6"/>
+                        <circle cx="220" cy="78" r="1.5" fill="#42A5F5" opacity="0.4"/>
+                        <circle cx="500" cy="72" r="2" fill="#00BFA5" opacity="0.6"/>
+                        <circle cx="540" cy="78" r="1.5" fill="#00BFA5" opacity="0.4"/>
+                        <!-- Heart shape -->
+                        <g transform="translate(360,92) scale(0.7)" filter="url(#glow)">
+                            <path d="M0,-45 C-5,-70 -45,-75 -55,-45 C-65,-15 -30,15 0,50 C30,15 65,-15 55,-45 C45,-75 5,-70 0,-45Z" fill="url(#heartFill)" stroke="#EF5350" stroke-width="1"/>
+                        </g>
+                        <!-- ECG line -->
+                        <polyline points="120,130 200,130 240,130 260,130 280,130 300,115 310,155 320,100 330,145 340,120 350,130 380,130 400,130 420,130 440,130 460,130 480,115 490,155 500,100 510,145 520,120 530,130 560,130 600,130" stroke="#42A5F5" stroke-width="1.2" fill="none" opacity="0.3"/>
+                        <!-- Label -->
+                        <text x="360" y="170" fill="#607D8B" font-size="8" font-family="Manrope,sans-serif" text-anchor="middle" letter-spacing="3" font-weight="600">CARDIOVASCULAR HEALTH RESEARCH</text>
+                    </svg>
+                </div>
+
                 <div class="center-title">
-                    <h2>Statins and<br>Heart Health</h2>
-                    <p class="byline">How statins affect LDL cholesterol and cardiovascular outcomes.</p>
+                    <h2>Statins &amp;<br>Heart Health</h2>
+                    <p class="byline">How statins affect LDL cholesterol and cardiovascular outcomes</p>
                     <p class="author">Nathan Wilner</p>
                     <p class="class-info">TCHS Pickering &middot; Allied Health &middot; Sarah Katchur &middot; 01/07/2026</p>
                 </div>
 
                 <div class="section">
                     <h3>What Are Statins?</h3>
-                    <p>Statins are the most prescribed medication in order to combat high cholesterol, with around 200 million people worldwide taking them. Atorvastatin is the most prescribed drug in all of America. They have been FDA-approved since 1987 and work by lowering LDL cholesterol and stabilizing arterial plaque (Johns Hopkins Medicine, n.d.).</p>
+                    <p>Statins are the <strong>most prescribed medication</strong> to combat high cholesterol, with around <strong>200 million people</strong> worldwide taking them. Atorvastatin is the most prescribed drug in all of America. FDA-approved since 1987, they work by lowering LDL cholesterol and stabilizing arterial plaque.</p>
+                </div>
+
+                <!-- Pill SVG -->
+                <div class="svg-illustration">
+                    <svg viewBox="0 0 680 70" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="680" height="70" fill="#060E1B"/>
+                        <!-- Pill 1 -->
+                        <rect x="40" y="20" width="80" height="30" rx="15" fill="#1976D2" opacity="0.2" stroke="#42A5F5" stroke-width="0.8"/>
+                        <rect x="40" y="20" width="40" height="30" rx="15" fill="#1976D2" opacity="0.4"/>
+                        <text x="80" y="58" fill="#607D8B" font-size="7" font-family="Inter,sans-serif" text-anchor="middle">Atorvastatin</text>
+                        <!-- Pill 2 -->
+                        <rect x="180" y="20" width="80" height="30" rx="15" fill="#00BFA5" opacity="0.2" stroke="#00BFA5" stroke-width="0.8"/>
+                        <rect x="180" y="20" width="40" height="30" rx="15" fill="#00BFA5" opacity="0.4"/>
+                        <text x="220" y="58" fill="#607D8B" font-size="7" font-family="Inter,sans-serif" text-anchor="middle">Rosuvastatin</text>
+                        <!-- Pill 3 -->
+                        <rect x="320" y="20" width="80" height="30" rx="15" fill="#FFA726" opacity="0.2" stroke="#FFA726" stroke-width="0.8"/>
+                        <rect x="320" y="20" width="40" height="30" rx="15" fill="#FFA726" opacity="0.4"/>
+                        <text x="360" y="58" fill="#607D8B" font-size="7" font-family="Inter,sans-serif" text-anchor="middle">Simvastatin</text>
+                        <!-- Pill 4 -->
+                        <rect x="460" y="20" width="80" height="30" rx="15" fill="#66BB6A" opacity="0.2" stroke="#66BB6A" stroke-width="0.8"/>
+                        <rect x="460" y="20" width="40" height="30" rx="15" fill="#66BB6A" opacity="0.4"/>
+                        <text x="500" y="58" fill="#607D8B" font-size="7" font-family="Inter,sans-serif" text-anchor="middle">Pravastatin</text>
+                        <!-- Pill 5 -->
+                        <rect x="600" y="20" width="50" height="30" rx="15" fill="#EF5350" opacity="0.2" stroke="#EF5350" stroke-width="0.8"/>
+                        <rect x="600" y="20" width="25" height="30" rx="15" fill="#EF5350" opacity="0.4"/>
+                        <text x="625" y="58" fill="#607D8B" font-size="7" font-family="Inter,sans-serif" text-anchor="middle">Lovastatin</text>
+                        <!-- Label -->
+                        <text x="340" y="13" fill="#42A5F5" font-size="6.5" font-family="Manrope,sans-serif" text-anchor="middle" letter-spacing="2" font-weight="700">COMMON STATIN MEDICATIONS</text>
+                    </svg>
                 </div>
 
                 <div class="section">
                     <h3>Mechanism of Action</h3>
                 </div>
-                <div class="pathway-step">
-                    <div class="step-num">1 &mdash; Inhibit Enzyme</div>
-                    <p>Statins inhibit HMG-CoA reductase, the rate-limiting enzyme in hepatic cholesterol production</p>
-                </div>
-                <div class="pathway-step">
-                    <div class="step-num">2 &mdash; Reduced Synthesis</div>
-                    <p>Liver produces less cholesterol, causing movement of sterol regulatory element binding proteins (SREBPs)</p>
-                </div>
-                <div class="pathway-step">
-                    <div class="step-num">3 &mdash; More LDL Receptors</div>
-                    <p>SREBPs increase transcription of the LDL receptor gene, producing more receptors</p>
-                </div>
-                <div class="pathway-step">
-                    <div class="step-num">4 &mdash; LDL Clearance</div>
-                    <p>More LDL receptors cause greater uptake and clearance of LDL from the bloodstream (Feingold, 2024)</p>
-                </div>
 
-                <div class="section" style="margin-top: 12px;">
-                    <h3>Statin Intensity Classification</h3>
+                <div class="mechanism-grid">
+                    <div class="mechanism-card">
+                        <div class="num">01</div>
+                        <div class="title">Inhibit Enzyme</div>
+                        <p>Block HMG-CoA reductase, the rate-limiting enzyme in cholesterol production</p>
+                    </div>
+                    <div class="mechanism-card">
+                        <div class="num">02</div>
+                        <div class="title">Reduced Synthesis</div>
+                        <p>Liver produces less cholesterol, activating SREBPs</p>
+                    </div>
+                    <div class="mechanism-card">
+                        <div class="num">03</div>
+                        <div class="title">More Receptors</div>
+                        <p>SREBPs increase LDL receptor gene transcription</p>
+                    </div>
+                    <div class="mechanism-card">
+                        <div class="num">04</div>
+                        <div class="title">LDL Clearance</div>
+                        <p>More receptors = greater uptake of LDL from blood</p>
+                    </div>
+                </div>
+                <p style="font-size: 0.5rem; color: var(--text-dim); margin-bottom: 8px;">(Feingold, 2024)</p>
+
+                <div class="section">
+                    <h3>Statin Intensity</h3>
                 </div>
                 <table class="table-mini">
                     <tr><th>Intensity</th><th>LDL Reduction</th><th>Examples</th></tr>
-                    <tr><td style="color: var(--red-accent); font-weight: 600;">High</td><td>&ge;50%</td><td>Atorvastatin 40&ndash;80mg, Rosuvastatin 20&ndash;40mg</td></tr>
-                    <tr><td style="color: var(--orange); font-weight: 600;">Moderate</td><td>30&ndash;49%</td><td>Atorvastatin 10&ndash;20mg, Simvastatin 20&ndash;40mg</td></tr>
-                    <tr><td style="color: var(--green); font-weight: 600;">Low</td><td>&lt;30%</td><td>Simvastatin 10mg, Pravastatin 10&ndash;20mg</td></tr>
+                    <tr><td style="color: var(--red); font-weight: 700;">High</td><td>&ge; 50%</td><td>Atorvastatin 40&ndash;80mg, Rosuvastatin 20&ndash;40mg</td></tr>
+                    <tr><td style="color: var(--orange); font-weight: 700;">Moderate</td><td>30&ndash;49%</td><td>Atorvastatin 10&ndash;20mg, Simvastatin 20&ndash;40mg</td></tr>
+                    <tr><td style="color: var(--green); font-weight: 700;">Low</td><td>&lt; 30%</td><td>Simvastatin 10mg, Pravastatin 10&ndash;20mg</td></tr>
                 </table>
 
-                <div class="stats-row-4" style="margin-top: 12px;">
+                <div class="stats-row-4" style="margin-top: 10px;">
                     <div class="stat-block">
-                        <div class="number red">39%&darr;</div>
-                        <div class="label">LDL-C Reduction<br>5mg Rosuvastatin</div>
+                        <div class="number red">39%</div>
+                        <div class="label">LDL Reduction<br>5mg Rosuvastatin</div>
                     </div>
                     <div class="stat-block">
-                        <div class="number orange">44%&darr;</div>
-                        <div class="label">LDL-C Reduction<br>10mg</div>
+                        <div class="number orange">44%</div>
+                        <div class="label">LDL Reduction<br>10mg</div>
                     </div>
                     <div class="stat-block">
-                        <div class="number green">50%&darr;</div>
-                        <div class="label">LDL-C Reduction<br>20mg</div>
+                        <div class="number green">50%</div>
+                        <div class="label">LDL Reduction<br>20mg</div>
                     </div>
                     <div class="stat-block">
-                        <div class="number teal">55%&darr;</div>
-                        <div class="label">LDL-C Reduction<br>40mg</div>
+                        <div class="number teal">55%</div>
+                        <div class="label">LDL Reduction<br>40mg</div>
                     </div>
                 </div>
             </div>
@@ -534,64 +891,66 @@
             <div class="panel panel-right">
                 <span class="panel-label">Panel C</span>
                 <div class="panel-header">
-                    <h2><span class="cross-icon"></span> Findings &amp; Conclusions</h2>
+                    <h2>Findings &amp; Conclusions</h2>
                 </div>
 
                 <div class="section">
-                    <h3>Key Data</h3>
+                    <h3>Key Clinical Data</h3>
                 </div>
                 <div class="stats-row">
                     <div class="stat-block">
                         <div class="number blue">22%</div>
-                        <div class="label">Relative Risk Reduction in Major Vascular Events per 1 mmol/L LDL-C decrease</div>
+                        <div class="label">CV Event Risk Reduction per 1 mmol/L LDL-C decrease</div>
                     </div>
                     <div class="stat-block">
-                        <div class="number red">20%&darr;</div>
-                        <div class="label">Deaths from Coronary Disease</div>
-                    </div>
-                    <div class="stat-block">
-                        <div class="number orange">16%&darr;</div>
-                        <div class="label">Ischemic Stroke</div>
-                    </div>
-                    <div class="stat-block">
-                        <div class="number green">10%&darr;</div>
-                        <div class="label">All-Cause Mortality</div>
+                        <div class="number red">20%</div>
+                        <div class="label">Reduction in Coronary Death</div>
                     </div>
                 </div>
-                <p style="font-size: 0.58rem; color: var(--text-dim); margin-bottom: 10px;">(Cholesterol Treatment Trialists&rsquo; [CTT] Collaboration et al., 2010)</p>
+                <div class="stats-row">
+                    <div class="stat-block">
+                        <div class="number orange">16%</div>
+                        <div class="label">Reduction in Ischemic Stroke</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="number green">10%</div>
+                        <div class="label">Reduction in All-Cause Mortality</div>
+                    </div>
+                </div>
+                <p style="font-size: 0.5rem; color: var(--text-dim); margin-bottom: 10px;">(CTT Collaboration et al., 2010)</p>
 
                 <div class="section">
                     <h3>Research Findings</h3>
                     <ul>
-                        <li>Log-linear relationship between statin dose and LDL-C reduction: doubling dose reduces LDL-C by 5.6&ndash;6.2% (Oni-Orisan et al., 2018)</li>
-                        <li>Benefits consistent regardless of age, sex, or baseline LDL-C (CTT Collaborators, 2012)</li>
-                        <li>No increase in cancer incidence or non-vascular mortality (CTT Collaboration, 2010)</li>
+                        <li><strong>Log-linear relationship</strong> between dose and LDL-C reduction: doubling dose reduces LDL-C by 5.6&ndash;6.2%</li>
+                        <li>Benefits <strong>consistent regardless</strong> of age, sex, or baseline LDL-C</li>
+                        <li><strong>No increase</strong> in cancer incidence or non-vascular mortality</li>
                     </ul>
                 </div>
 
                 <div class="benefit-risk">
                     <div class="benefit-box">
                         <h4>Benefits</h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">22% reduction in CV events</li>
-                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">10% reduction in mortality</li>
-                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">Cost-effective medication</li>
-                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">Consistent effects over time</li>
+                        <ul class="br-list">
+                            <li>22% reduction in CV events</li>
+                            <li>10% reduction in mortality</li>
+                            <li>Cost-effective treatment</li>
+                            <li>Consistent effects over time</li>
                         </ul>
                     </div>
                     <div class="risk-box">
-                        <h4>Risks &amp; Side Effects</h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">Muscle pain (~1%)</li>
-                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">New-onset diabetes (10&ndash;36%)</li>
-                            <li style="font-size: 0.65rem; padding-left: 14px; position: relative; margin-bottom: 3px; color: #ccd6e4;">Rhabdomyolysis (rare)</li>
+                        <h4>Risks</h4>
+                        <ul class="br-list">
+                            <li>Muscle pain (~1%)</li>
+                            <li>New-onset diabetes (10&ndash;36%)</li>
+                            <li>Rhabdomyolysis (rare)</li>
                         </ul>
                     </div>
                 </div>
 
-                <div class="research-box">
+                <div class="research-box" style="margin-top: auto;">
                     <div class="label">Conclusion</div>
-                    <p>For most patients with elevated cardiovascular risk, the benefits of statins clearly overshadow the potential risks. Statins are highly effective at lowering LDL cholesterol (30&ndash;50%), with strong evidence supporting a 22% reduction in major cardiovascular events per 38.67 mg/dL decrease in LDL-C.</p>
+                    <p>For most patients with elevated cardiovascular risk, the benefits of statins <strong style="color: var(--text);">clearly outweigh the potential risks</strong>. Statins are highly effective at lowering LDL cholesterol (30&ndash;50%), with strong evidence supporting a <strong style="color: var(--teal);">22% reduction in major cardiovascular events</strong> per 38.67 mg/dL decrease in LDL-C.</p>
                 </div>
             </div>
         </div>
@@ -602,23 +961,26 @@
         <p>
             1. Centers for Disease Control and Prevention. (2024, October 24). Heart disease facts. U.S. Department of Health and Human Services. https://www.cdc.gov/heart-disease/data-research/facts-stats/index.html<br>
             2. Cholesterol Treatment Trialists&rsquo; (CTT) Collaboration, Baigent, C., Blackwell, L., et al. (2010). Efficacy and safety of more intensive lowering of LDL cholesterol: A meta-analysis of data from 170,000 participants in 26 randomised trials. <em>Lancet</em>, 376(9753), 1670&ndash;1681.<br>
-            3. Cholesterol Treatment Trialists&rsquo; (CTT) Collaboration, Baigent, C., Blackwell, L., et al. (2012). The effects of lowering LDL cholesterol with statin therapy in people at low risk of vascular disease: Meta-analysis of individual data from 27 randomised trials. <em>Lancet</em>, 380(9841), 581&ndash;590.<br>
-            4. Cholesterol Treatment Trialists&rsquo; (CTT) Collaboration. (2022). Effect of statin therapy on muscle symptoms: An individual participant data meta-analysis of large-scale, randomised, double-blind trials. <em>Lancet</em>, 400(10355), 832&ndash;845.<br>
-            5. Cholesterol Treatment Trialists&rsquo; (CTT) Collaboration. (2024). Effects of statin therapy on diagnoses of new-onset diabetes and worsening glycaemia in large-scale randomised blinded statin trials. <em>The Lancet Diabetes &amp; Endocrinology</em>, 12(5), 306&ndash;319.<br>
+            3. Cholesterol Treatment Trialists&rsquo; (CTT) Collaboration, Baigent, C., Blackwell, L., et al. (2012). The effects of lowering LDL cholesterol with statin therapy in people at low risk of vascular disease. <em>Lancet</em>, 380(9841), 581&ndash;590.<br>
+            4. Cholesterol Treatment Trialists&rsquo; (CTT) Collaboration. (2022). Effect of statin therapy on muscle symptoms. <em>Lancet</em>, 400(10355), 832&ndash;845.<br>
+            5. Cholesterol Treatment Trialists&rsquo; (CTT) Collaboration. (2024). Effects of statin therapy on diagnoses of new-onset diabetes. <em>The Lancet Diabetes &amp; Endocrinology</em>, 12(5), 306&ndash;319.<br>
             6. Cleveland Clinic. (2024, December 23). LDL cholesterol: What it is &amp; how to manage it. https://my.clevelandclinic.org/health/articles/24391-ldl-cholesterol<br>
-            7. Feingold, K. R. (2024, February 12). Cholesterol lowering drugs. In K. R. Feingold et al. (Eds.), <em>Endotext</em>. MDText.com, Inc. https://www.ncbi.nlm.nih.gov/books/NBK395573/<br>
-            8. Institute for Quality and Efficiency in Health Care. (2025, September 17). In brief: What is cholesterol and how does arteriosclerosis develop? InformedHealth.org.<br>
+            7. Feingold, K. R. (2024, February 12). Cholesterol lowering drugs. In K. R. Feingold et al. (Eds.), <em>Endotext</em>. MDText.com, Inc.<br>
+            8. Institute for Quality and Efficiency in Health Care. (2025, September 17). What is cholesterol and how does arteriosclerosis develop? InformedHealth.org.<br>
             9. Johns Hopkins Medicine. (n.d.). How statin drugs protect the heart. https://www.hopkinsmedicine.org/health/wellness-and-prevention/how-statin-drugs-protect-the-heart<br>
-            10. Karlson, B. W., Palmer, M. K., Nicholls, S. J., et al. (2016). Doses of rosuvastatin, atorvastatin and simvastatin that induce equal reductions in LDL-C and non-HDL-C: Results from the VOYAGER meta-analysis. <em>European Journal of Preventive Cardiology</em>, 23(7), 744&ndash;747.<br>
-            11. Mendes, P., Robles, P. G., &amp; Mathur, S. (2014). Statin-induced rhabdomyolysis: A comprehensive review of case reports. <em>Physiotherapy Canada</em>, 66(2), 124&ndash;132.<br>
-            12. Oni-Orisan, A., Hoffmann, T. J., et al. (2018). Characterization of Statin Low-Density Lipoprotein Cholesterol Dose-Response Using Electronic Health Records. <em>Circulation: Genomic and Precision Medicine</em>, 11(9), e002043.<br>
+            10. Karlson, B. W., et al. (2016). Doses of rosuvastatin, atorvastatin and simvastatin that induce equal reductions in LDL-C and non-HDL-C. <em>European Journal of Preventive Cardiology</em>, 23(7), 744&ndash;747.<br>
+            11. Mendes, P., Robles, P. G., &amp; Mathur, S. (2014). Statin-induced rhabdomyolysis: A comprehensive review. <em>Physiotherapy Canada</em>, 66(2), 124&ndash;132.<br>
+            12. Oni-Orisan, A., et al. (2018). Characterization of Statin LDL Cholesterol Dose-Response Using Electronic Health Records. <em>Circulation: Genomic and Precision Medicine</em>, 11(9), e002043.<br>
         </p>
     </div>
 
     <script>
         async function downloadPNG() {
             const el = document.getElementById('trifold');
-            const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#0A1628' });
+            const capture = async () => {
+                return await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#060E1B', width: 1440, windowWidth: 1440 });
+            };
+            const canvas = window.forceDesktopForCapture ? await forceDesktopForCapture(capture) : await capture();
             const link = document.createElement('a');
             link.download = 'statins-heart-health-trifold.png';
             link.href = canvas.toDataURL('image/png');
