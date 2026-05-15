@@ -1,0 +1,140 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - heading "Passion Project Trifolds" [level=1] [ref=e4]
+    - paragraph [ref=e5]: 12 Honors English · 2025
+  - heading "V2 — Imagen 4 + HTML/CSS Infographics" [level=2] [ref=e6]
+  - paragraph [ref=e7]: Photorealistic images, no garbled AI text
+  - generic [ref=e8]:
+    - link "AI Hallucinations V2 AI Hallucinations Infographics rebuilt as crisp HTML/CSS. Photos regenerated with Imagen 4. V2 Anthropic Style →" [ref=e9] [cursor=pointer]:
+      - /url: /hallucinations-v2
+      - img "AI Hallucinations V2" [ref=e11]
+      - generic [ref=e12]:
+        - heading "AI Hallucinations" [level=2] [ref=e13]
+        - paragraph [ref=e14]: Infographics rebuilt as crisp HTML/CSS. Photos regenerated with Imagen 4.
+        - generic [ref=e15]:
+          - generic [ref=e16]: V2
+          - generic [ref=e17]: Anthropic Style
+      - generic [ref=e18]: →
+    - link "LeBron GOAT V2 Why LeBron James is the GOAT Stats and timeline rebuilt as HTML/CSS. Action shot regenerated with Imagen 4. V2 Dark + Gold →" [ref=e19] [cursor=pointer]:
+      - /url: /lebron-v2
+      - img "LeBron GOAT V2" [ref=e21]
+      - generic [ref=e22]:
+        - heading "Why LeBron James is the GOAT" [level=2] [ref=e23]
+        - paragraph [ref=e24]: Stats and timeline rebuilt as HTML/CSS. Action shot regenerated with Imagen 4.
+        - generic [ref=e25]:
+          - generic [ref=e26]: V2
+          - generic [ref=e27]: Dark + Gold
+      - generic [ref=e28]: →
+    - link "Music Impact V2 Music's Impact on Gen Z All photos regenerated with Imagen 4 for maximum realism. V2 Gen Z Aesthetic →" [ref=e29] [cursor=pointer]:
+      - /url: /music-v2
+      - img "Music Impact V2" [ref=e31]
+      - generic [ref=e32]:
+        - heading "Music's Impact on Gen Z" [level=2] [ref=e33]
+        - paragraph [ref=e34]: All photos regenerated with Imagen 4 for maximum realism.
+        - generic [ref=e35]:
+          - generic [ref=e36]: V2
+          - generic [ref=e37]: Gen Z Aesthetic
+      - generic [ref=e38]: →
+    - link "AI Fake News V2 AI-Generated Fake News Media literacy shield rebuilt as HTML/CSS. All photos regenerated with Imagen 4. V2 Editorial →" [ref=e39] [cursor=pointer]:
+      - /url: /fakenews-v2
+      - img "AI Fake News V2" [ref=e41]
+      - generic [ref=e42]:
+        - heading "AI-Generated Fake News" [level=2] [ref=e43]
+        - paragraph [ref=e44]: Media literacy shield rebuilt as HTML/CSS. All photos regenerated with Imagen 4.
+        - generic [ref=e45]:
+          - generic [ref=e46]: V2
+          - generic [ref=e47]: Editorial
+      - generic [ref=e48]: →
+  - heading "V1 — Original" [level=2] [ref=e50]
+  - generic [ref=e51]:
+    - link "AI Hallucinations AI Hallucinations When machines lie with confidence. How LLMs generate false information and why it's an inherent flaw, not a bug being fixed. Anthropic Style 24x16 Trifold →" [ref=e52] [cursor=pointer]:
+      - /url: /hallucinations
+      - img "AI Hallucinations" [ref=e54]
+      - generic [ref=e55]:
+        - heading "AI Hallucinations" [level=2] [ref=e56]
+        - paragraph [ref=e57]: When machines lie with confidence. How LLMs generate false information and why it's an inherent flaw, not a bug being fixed.
+        - generic [ref=e58]:
+          - generic [ref=e59]: Anthropic Style
+          - generic [ref=e60]: 24x16 Trifold
+      - generic [ref=e61]: →
+    - 'link "LeBron GOAT Why LeBron James is the GOAT The case for LeBron: 40,000+ points, 4 championships, 20 All-Stars, and unprecedented longevity across 21 seasons. Sports Poster Dark + Gold →" [ref=e62] [cursor=pointer]':
+      - /url: /lebron
+      - img "LeBron GOAT" [ref=e64]
+      - generic [ref=e65]:
+        - heading "Why LeBron James is the GOAT" [level=2] [ref=e66]
+        - paragraph [ref=e67]: "The case for LeBron: 40,000+ points, 4 championships, 20 All-Stars, and unprecedented longevity across 21 seasons."
+        - generic [ref=e68]:
+          - generic [ref=e69]: Sports Poster
+          - generic [ref=e70]: Dark + Gold
+      - generic [ref=e71]: →
+    - link "Music Impact Music's Impact on Gen Z How streaming, algorithms, and unlimited access made music the most powerful force shaping Gen Z identity and mental health. Gen Z Aesthetic Glassmorphism →" [ref=e72] [cursor=pointer]:
+      - /url: /music
+      - img "Music Impact" [ref=e74]
+      - generic [ref=e75]:
+        - heading "Music's Impact on Gen Z" [level=2] [ref=e76]
+        - paragraph [ref=e77]: How streaming, algorithms, and unlimited access made music the most powerful force shaping Gen Z identity and mental health.
+        - generic [ref=e78]:
+          - generic [ref=e79]: Gen Z Aesthetic
+          - generic [ref=e80]: Glassmorphism
+      - generic [ref=e81]: →
+    - 'link "AI Fake News AI-Generated Fake News The misinformation crisis threatening democracy: unlimited fake content at zero cost, overwhelming human ability to detect truth. Editorial Investigative →" [ref=e82] [cursor=pointer]':
+      - /url: /fakenews
+      - img "AI Fake News" [ref=e84]
+      - generic [ref=e85]:
+        - heading "AI-Generated Fake News" [level=2] [ref=e86]
+        - paragraph [ref=e87]: "The misinformation crisis threatening democracy: unlimited fake content at zero cost, overwhelming human ability to detect truth."
+        - generic [ref=e88]:
+          - generic [ref=e89]: Editorial
+          - generic [ref=e90]: Investigative
+      - generic [ref=e91]: →
+    - link "✚ Statins and Heart Health How statins affect LDL cholesterol and cardiovascular event risk. Research-driven analysis of mechanism, efficacy, and safety data. Allied Health Clinical Research →" [ref=e92] [cursor=pointer]:
+      - /url: /statins
+      - generic [ref=e94]: ✚
+      - generic [ref=e95]:
+        - heading "Statins and Heart Health" [level=2] [ref=e96]
+        - paragraph [ref=e97]: How statins affect LDL cholesterol and cardiovascular event risk. Research-driven analysis of mechanism, efficacy, and safety data.
+        - generic [ref=e98]:
+          - generic [ref=e99]: Allied Health
+          - generic [ref=e100]: Clinical Research
+      - generic [ref=e101]: →
+    - link "✨ The Impact of Confidence How belief in yourself transforms achievement, relationships, and mental health. The science behind why confidence matters more than talent. Psychology Self-Growth →" [ref=e102] [cursor=pointer]:
+      - /url: /confidence
+      - generic [ref=e104]: ✨
+      - generic [ref=e105]:
+        - heading "The Impact of Confidence" [level=2] [ref=e106]
+        - paragraph [ref=e107]: How belief in yourself transforms achievement, relationships, and mental health. The science behind why confidence matters more than talent.
+        - generic [ref=e108]:
+          - generic [ref=e109]: Psychology
+          - generic [ref=e110]: Self-Growth
+      - generic [ref=e111]: →
+    - link "🌙 Why We Dream The neuroscience of sleep. Why your brain dreams for 2 hours every night, and how it shapes memory, emotion, and creativity. Neuroscience Sleep Science →" [ref=e112] [cursor=pointer]:
+      - /url: /dreams
+      - generic [ref=e114]: 🌙
+      - generic [ref=e115]:
+        - heading "Why We Dream" [level=2] [ref=e116]
+        - paragraph [ref=e117]: The neuroscience of sleep. Why your brain dreams for 2 hours every night, and how it shapes memory, emotion, and creativity.
+        - generic [ref=e118]:
+          - generic [ref=e119]: Neuroscience
+          - generic [ref=e120]: Sleep Science
+      - generic [ref=e121]: →
+    - 'link ">_ The Algorithm How social media controls you. The engagement machine behind your feed: filter bubbles, dopamine loops, and the attention economy. Cyberpunk Social Media →" [ref=e122] [cursor=pointer]':
+      - /url: /algorithms
+      - generic [ref=e124]: ">_"
+      - generic [ref=e125]:
+        - heading "The Algorithm" [level=2] [ref=e126]
+        - paragraph [ref=e127]: "How social media controls you. The engagement machine behind your feed: filter bubbles, dopamine loops, and the attention economy."
+        - generic [ref=e128]:
+          - generic [ref=e129]: Cyberpunk
+          - generic [ref=e130]: Social Media
+      - generic [ref=e131]: →
+    - 'link "👟 Sneaker Culture: More Than Just Shoes A $79 billion industry where rubber meets identity. How sneakers evolved from athletic footwear into a global cultural phenomenon of fashion, economics, and self-expression. Streetwear Cultural Analysis →" [ref=e132] [cursor=pointer]':
+      - /url: /sneakers
+      - generic [ref=e134]: 👟
+      - generic [ref=e135]:
+        - 'heading "Sneaker Culture: More Than Just Shoes" [level=2] [ref=e136]'
+        - paragraph [ref=e137]: A $79 billion industry where rubber meets identity. How sneakers evolved from athletic footwear into a global cultural phenomenon of fashion, economics, and self-expression.
+        - generic [ref=e138]:
+          - generic [ref=e139]: Streetwear
+          - generic [ref=e140]: Cultural Analysis
+      - generic [ref=e141]: →
+  - contentinfo [ref=e142]: Built with Imagen 4 + Claude · Each trifold includes PNG/PDF export

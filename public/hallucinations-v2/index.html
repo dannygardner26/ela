@@ -214,6 +214,7 @@
             <button class="primary" onclick="downloadPNG()">Export PNG</button>
             <button onclick="downloadPDF()">Export PDF</button>
             <button onclick="window.print()">Print</button>
+            <button onclick="openComponents()">Print Components</button>
         </div>
     </div>
 
@@ -356,6 +357,7 @@
             pdf.save('ai-hallucinations-trifold-v2.pdf');
         }
     </script>
+    <script src="/print-components.js" defer></script>
     <script src="/trifold-mobile.js" defer></script>
 </body>
 </html>
