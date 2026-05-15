@@ -122,6 +122,13 @@
         return '';
     }
 
+    function getPhysicalSize(el) {
+        const rect = el.getBoundingClientRect();
+        const wInches = (rect.width / 1440 * 24).toFixed(1);
+        const hInches = (rect.height / 1440 * 24).toFixed(1);
+        return `${wInches}" × ${hInches}"`;
+    }
+
     function getBgColor() {
         const panels = document.querySelectorAll('.panel');
         if (panels.length > 0) {
@@ -184,6 +191,10 @@
                 font-size: 0.6rem; color: #777; margin-top: 2px;
                 white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
             }
+            .pc-item-dims {
+                font-size: 0.55rem; color: #555; flex-shrink: 0;
+                font-family: monospace; letter-spacing: 0.5px;
+            }
             .pc-item-dl { color: #888; font-size: 0.85rem; flex-shrink: 0; }
             .pc-download-all {
                 width: 100%; padding: 12px; margin-top: 16px;
@@ -230,11 +241,13 @@
             if (!items || items.length === 0) return;
             let itemsHTML = items.map(c => {
                 const preview = getTextPreview(c.el);
+                const dims = getPhysicalSize(c.el);
                 return `<button class="pc-item" data-idx="${c._index}">
                     <div class="pc-item-info">
                         <div class="pc-item-label">${c.label}</div>
                         ${preview ? `<div class="pc-item-preview">${preview}</div>` : ''}
                     </div>
+                    <span class="pc-item-dims">${dims}</span>
                     <span class="pc-item-dl">&darr;</span>
                 </button>`;
             }).join('');
@@ -248,7 +261,7 @@
             <div class="pc-modal">
                 <button class="pc-close" onclick="closeComponents()">&times;</button>
                 <h2>Print Components</h2>
-                <p class="pc-subtitle">Download each piece individually at 300 DPI. Print, cut, and glue onto your poster board. ${components.length} components found.</p>
+                <p class="pc-subtitle">Each piece exports at 300 DPI, scaled to fit a 24&times;16&Prime; poster board. Panel A/C pieces are 6&Prime; wide, Panel B pieces are 12&Prime; wide. <strong>Print at 100% scale</strong>, cut out, and glue. ${components.length} components found.</p>
                 ${groupsHTML}
                 <button class="pc-download-all" id="pc-download-all">Download All ${components.length} Components</button>
                 <div class="pc-progress" id="pc-progress"></div>
@@ -291,16 +304,22 @@
         document.head.appendChild(s);
     }
 
+    // Scale 5 maps 1440px HTML → 7200px output = 300 DPI at 24" wide.
+    // Panel A (360px) → 1800px = 6" at 300 DPI
+    // Panel B (720px) → 3600px = 12" at 300 DPI
+    // Panel C (360px) → 1800px = 6" at 300 DPI
+    // Heights scale proportionally so every piece is poster-accurate.
+    const POSTER_SCALE = 5;
+
     async function captureElement(el) {
         injectCaptureStyles();
         document.body.classList.add('pc-capturing');
         await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-        const scale = 4;
         let canvas;
         try {
             canvas = await html2canvas(el, {
-                scale,
+                scale: POSTER_SCALE,
                 useCORS: true,
                 backgroundColor: getBgColor(),
             });
