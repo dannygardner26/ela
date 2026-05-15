@@ -1,0 +1,96 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - heading "Passion Project Trifolds" [level=1] [ref=e4]
+    - paragraph [ref=e5]: 12 Honors English · 2025
+  - generic [ref=e6]:
+    - link "AI Hallucinations AI Hallucinations When machines lie with confidence. How LLMs generate false information and why it's an inherent flaw, not a bug being fixed. Anthropic Style 24x16 Trifold →" [ref=e7] [cursor=pointer]:
+      - /url: /hallucinations
+      - img "AI Hallucinations" [ref=e9]
+      - generic [ref=e10]:
+        - heading "AI Hallucinations" [level=2] [ref=e11]
+        - paragraph [ref=e12]: When machines lie with confidence. How LLMs generate false information and why it's an inherent flaw, not a bug being fixed.
+        - generic [ref=e13]:
+          - generic [ref=e14]: Anthropic Style
+          - generic [ref=e15]: 24x16 Trifold
+      - generic [ref=e16]: →
+    - 'link "LeBron GOAT Why LeBron James is the GOAT The case for LeBron: 40,000+ points, 4 championships, 20 All-Stars, and unprecedented longevity across 21 seasons. Sports Poster Dark + Gold →" [ref=e17] [cursor=pointer]':
+      - /url: /lebron
+      - img "LeBron GOAT" [ref=e19]
+      - generic [ref=e20]:
+        - heading "Why LeBron James is the GOAT" [level=2] [ref=e21]
+        - paragraph [ref=e22]: "The case for LeBron: 40,000+ points, 4 championships, 20 All-Stars, and unprecedented longevity across 21 seasons."
+        - generic [ref=e23]:
+          - generic [ref=e24]: Sports Poster
+          - generic [ref=e25]: Dark + Gold
+      - generic [ref=e26]: →
+    - link "Music Impact Music's Impact on Gen Z How streaming, algorithms, and unlimited access made music the most powerful force shaping Gen Z identity and mental health. Gen Z Aesthetic Glassmorphism →" [ref=e27] [cursor=pointer]:
+      - /url: /music
+      - img "Music Impact" [ref=e29]
+      - generic [ref=e30]:
+        - heading "Music's Impact on Gen Z" [level=2] [ref=e31]
+        - paragraph [ref=e32]: How streaming, algorithms, and unlimited access made music the most powerful force shaping Gen Z identity and mental health.
+        - generic [ref=e33]:
+          - generic [ref=e34]: Gen Z Aesthetic
+          - generic [ref=e35]: Glassmorphism
+      - generic [ref=e36]: →
+    - 'link "AI Fake News AI-Generated Fake News The misinformation crisis threatening democracy: unlimited fake content at zero cost, overwhelming human ability to detect truth. Editorial Investigative →" [ref=e37] [cursor=pointer]':
+      - /url: /fakenews
+      - img "AI Fake News" [ref=e39]
+      - generic [ref=e40]:
+        - heading "AI-Generated Fake News" [level=2] [ref=e41]
+        - paragraph [ref=e42]: "The misinformation crisis threatening democracy: unlimited fake content at zero cost, overwhelming human ability to detect truth."
+        - generic [ref=e43]:
+          - generic [ref=e44]: Editorial
+          - generic [ref=e45]: Investigative
+      - generic [ref=e46]: →
+    - link "✚ Statins and Heart Health How statins affect LDL cholesterol and cardiovascular event risk. Research-driven analysis of mechanism, efficacy, and safety data. Allied Health Clinical Research →" [ref=e47] [cursor=pointer]:
+      - /url: /statins
+      - generic [ref=e49]: ✚
+      - generic [ref=e50]:
+        - heading "Statins and Heart Health" [level=2] [ref=e51]
+        - paragraph [ref=e52]: How statins affect LDL cholesterol and cardiovascular event risk. Research-driven analysis of mechanism, efficacy, and safety data.
+        - generic [ref=e53]:
+          - generic [ref=e54]: Allied Health
+          - generic [ref=e55]: Clinical Research
+      - generic [ref=e56]: →
+    - link "✨ The Impact of Confidence How belief in yourself transforms achievement, relationships, and mental health. The science behind why confidence matters more than talent. Psychology Self-Growth →" [ref=e57] [cursor=pointer]:
+      - /url: /confidence
+      - generic [ref=e59]: ✨
+      - generic [ref=e60]:
+        - heading "The Impact of Confidence" [level=2] [ref=e61]
+        - paragraph [ref=e62]: How belief in yourself transforms achievement, relationships, and mental health. The science behind why confidence matters more than talent.
+        - generic [ref=e63]:
+          - generic [ref=e64]: Psychology
+          - generic [ref=e65]: Self-Growth
+      - generic [ref=e66]: →
+    - link "🌙 Why We Dream The neuroscience of sleep. Why your brain dreams for 2 hours every night, and how it shapes memory, emotion, and creativity. Neuroscience Sleep Science →" [ref=e67] [cursor=pointer]:
+      - /url: /dreams
+      - generic [ref=e69]: 🌙
+      - generic [ref=e70]:
+        - heading "Why We Dream" [level=2] [ref=e71]
+        - paragraph [ref=e72]: The neuroscience of sleep. Why your brain dreams for 2 hours every night, and how it shapes memory, emotion, and creativity.
+        - generic [ref=e73]:
+          - generic [ref=e74]: Neuroscience
+          - generic [ref=e75]: Sleep Science
+      - generic [ref=e76]: →
+    - 'link ">_ The Algorithm How social media controls you. The engagement machine behind your feed: filter bubbles, dopamine loops, and the attention economy. Cyberpunk Social Media →" [ref=e77] [cursor=pointer]':
+      - /url: /algorithms
+      - generic [ref=e79]: ">_"
+      - generic [ref=e80]:
+        - heading "The Algorithm" [level=2] [ref=e81]
+        - paragraph [ref=e82]: "How social media controls you. The engagement machine behind your feed: filter bubbles, dopamine loops, and the attention economy."
+        - generic [ref=e83]:
+          - generic [ref=e84]: Cyberpunk
+          - generic [ref=e85]: Social Media
+      - generic [ref=e86]: →
+    - 'link "👟 Sneaker Culture: More Than Just Shoes A $79 billion industry where rubber meets identity. How sneakers evolved from athletic footwear into a global cultural phenomenon of fashion, economics, and self-expression. Streetwear Cultural Analysis →" [ref=e87] [cursor=pointer]':
+      - /url: /sneakers
+      - generic [ref=e89]: 👟
+      - generic [ref=e90]:
+        - 'heading "Sneaker Culture: More Than Just Shoes" [level=2] [ref=e91]'
+        - paragraph [ref=e92]: A $79 billion industry where rubber meets identity. How sneakers evolved from athletic footwear into a global cultural phenomenon of fashion, economics, and self-expression.
+        - generic [ref=e93]:
+          - generic [ref=e94]: Streetwear
+          - generic [ref=e95]: Cultural Analysis
+      - generic [ref=e96]: →
+  - contentinfo [ref=e97]: Built with Imagen 4 + Claude · Each trifold includes PNG/PDF export
