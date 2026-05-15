@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why LeBron James is the GOAT — V2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/trifold-mobile.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <style>
+        :root {
+            --gold: #FFD700; --gold-dim: #B8960C;
+            --purple: #552583; --purple-light: #7A45B0;
+            --bg: #0d0d0d; --surface: #161616; --surface-light: #1e1e1e;
+            --text: #f0f0f0; --text-dim: #998; --border: #2a2a2a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 0; min-height: 100vh; overflow-x: auto; min-width: 1440px; }
+
+        .toolbar {
+            position: sticky; top: 0; z-index: 1000;
+            background: var(--bg); padding: 10px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            border-bottom: 1px solid var(--border);
+        }
+        .toolbar .brand { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .toolbar .version { font-size: 0.55rem; color: var(--purple-light); background: rgba(122,69,176,0.15); padding: 2px 8px; border-radius: 3px; margin-left: 10px; font-weight: 600; letter-spacing: 1px; }
+        .toolbar .actions { display: flex; gap: 8px; }
+        .toolbar button { background: var(--gold); color: #000; border: none; padding: 8px 16px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
+        .toolbar button:hover { background: #fff; transform: translateY(-1px); }
+        .toolbar button.secondary { background: var(--surface-light); color: var(--text); border: 1px solid var(--border); }
+
+        .page-body { padding: 30px 20px; }
+        .page-header { text-align: center; margin-bottom: 20px; }
+        .page-header h1 { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 3px; font-weight: 400; }
+
+        .trifold-container { width: 1440px; margin: 0 auto; }
+        .trifold { display: grid; grid-template-columns: 360px 720px 360px; width: 1440px; border-radius: 6px; overflow: hidden; box-shadow: 0 0 80px rgba(255,215,0,0.05), 0 20px 60px rgba(0,0,0,0.6); }
+        .panel { background: var(--surface); padding: 28px 22px; display: flex; flex-direction: column; position: relative; }
+        .panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--purple), var(--gold)); }
+        .panel-left { border-right: 1px solid var(--border); }
+        .panel-right { border-left: 1px solid var(--border); }
+        .panel-label { position: absolute; top: 14px; right: 12px; font-size: 0.5rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.5; }
+        .panel-header h2 { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 700; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .section { margin-bottom: 14px; }
+        .section h3 { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--gold-dim); margin-bottom: 6px; font-weight: 500; }
+        .section p { font-size: 0.73rem; line-height: 1.6; color: #ccc; }
+        .section ul { list-style: none; padding: 0; }
+        .section li { font-size: 0.73rem; line-height: 1.5; color: #ccc; padding-left: 14px; margin-bottom: 4px; position: relative; }
+        .section li::before { content: ''; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; background: var(--gold); border-radius: 1px; transform: rotate(45deg); }
+        .img-frame { border-radius: 6px; overflow: hidden; margin: 10px 0; border: 1px solid var(--border); }
+        .img-frame img { width: 100%; display: block; }
+
+        .stat-block { background: linear-gradient(135deg, rgba(85,37,131,0.2), rgba(255,215,0,0.05)); border: 1px solid rgba(255,215,0,0.15); border-radius: 8px; padding: 12px 16px; margin: 10px 0; text-align: center; }
+        .stat-block .number { font-family: 'Montserrat', sans-serif; font-size: 2rem; font-weight: 700; color: var(--gold); line-height: 1; }
+        .stat-block .label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0; }
+
+        .thesis-box { background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.2); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; padding: 12px 14px; margin-top: auto; }
+        .thesis-box .label { font-family: 'Montserrat', sans-serif; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 4px; }
+        .thesis-box p { font-size: 0.68rem; line-height: 1.55; color: #ddd; }
+
+        .center-title { text-align: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .center-title h2 { font-family: 'Montserrat', sans-serif; font-size: 2.4rem; font-weight: 700; text-transform: uppercase; background: linear-gradient(135deg, var(--gold), #fff, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1; }
+        .center-title .byline { font-size: 0.8rem; color: var(--text-dim); margin-top: 6px; font-style: italic; }
+        .center-title .author { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--text-dim); margin-top: 8px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* Inline stats infographic */
+        .stats-infographic { background: rgba(255,215,0,0.03); border: 1px solid rgba(255,215,0,0.1); border-radius: 8px; padding: 16px; margin: 12px 0; }
+        .stats-infographic .big-stat { text-align: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+        .stats-infographic .big-stat .num { font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--gold); }
+        .stats-infographic .big-stat .desc { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+        .mini-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+        .mini-stat { text-align: center; padding: 6px 4px; background: rgba(255,215,0,0.04); border-radius: 4px; }
+        .mini-stat .val { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--gold); }
+        .mini-stat .lbl { font-size: 0.5rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+        /* Inline timeline */
+        .timeline { margin: 12px 0; padding: 0 8px; }
+        .timeline-item { display: flex; gap: 10px; margin-bottom: 8px; position: relative; }
+        .timeline-dot { width: 10px; min-width: 10px; display: flex; flex-direction: column; align-items: center; padding-top: 4px; }
+        .timeline-dot::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+        .timeline-dot::after { content: ''; flex: 1; width: 1px; background: var(--border); margin-top: 4px; }
+        .timeline-item:last-child .timeline-dot::after { display: none; }
+        .timeline-content { flex: 1; }
+        .timeline-year { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 700; color: var(--gold); }
+        .timeline-desc { font-size: 0.6rem; color: #aaa; line-height: 1.4; }
+
+        .back-panel { width: 1440px; margin: 20px auto 0; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 20px 28px; }
+        .back-panel h2 { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+        .back-panel p { font-size: 0.68rem; color: #999; line-height: 1.8; }
+
+        @media print { .toolbar { display: none; } body { background: #fff; padding: 0; } .page-header { display: none; } .panel { background: #fff; } .panel::before { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <span class="brand">LeBron James &mdash; The GOAT <span class="version">V2</span></span>
+        <div class="actions">
+            <button onclick="downloadPNG()">Download PNG</button>
+            <button class="secondary" onclick="window.print()">Print</button>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="page-header"><h1>Passion Project &mdash; Why LeBron James is the GOAT V2</h1></div>
+
+        <div class="trifold-container" id="trifold">
+            <div class="trifold">
+                <!-- LEFT PANEL A -->
+                <div class="panel panel-left">
+                    <span class="panel-label">Panel A</span>
+                    <div class="panel-header"><h2>The King's Rise</h2></div>
+                    <div class="section">
+                        <h3>Who Is LeBron James?</h3>
+                        <p>Drafted #1 overall in 2003 straight from high school, LeBron James entered the NBA with expectations no athlete had ever carried&mdash;and exceeded every single one across 21+ seasons.</p>
+                    </div>
+                    <div class="img-frame">
+                        <img src="/images/v2-lebron-crown-goat.png" alt="Golden crown atop basketball">
+                    </div>
+                    <div class="section">
+                        <h3>Why The Debate Matters</h3>
+                        <p>The GOAT conversation isn't just about basketball&mdash;it's about how we measure greatness. Do we value peak dominance or sustained excellence? Rings or individual impact?</p>
+                    </div>
+                    <div class="thesis-box">
+                        <div class="label">Thesis</div>
+                        <p>LeBron James is the greatest basketball player of all time because his unprecedented combination of longevity, versatility, statistical dominance, and sustained excellence across two decades surpasses any single peak performance in NBA history.</p>
+                    </div>
+                </div>
+
+                <!-- CENTER PANEL B -->
+                <div class="panel panel-center">
+                    <span class="panel-label">Panel B</span>
+                    <div class="center-title">
+                        <h2>The Case for<br>LeBron James</h2>
+                        <p class="byline">Unprecedented. Unmatched. Undeniable.</p>
+                        <p class="author">Danny Gardner</p>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-block"><div class="number">40,474</div><div class="label">Career Points (All-Time #1)</div></div>
+                        <div class="stat-block"><div class="number">4</div><div class="label">Championships (3 Teams)</div></div>
+                        <div class="stat-block"><div class="number">4</div><div class="label">Finals MVPs</div></div>
+                        <div class="stat-block"><div class="number">20</div><div class="label">All-Star Selections</div></div>
+                    </div>
+
+                    <!-- INLINE: Stats infographic (replaces garbled lebron-stats-infographic.png) -->
+                    <div class="stats-infographic">
+                        <div class="big-stat">
+                            <div class="num">40,474</div>
+                            <div class="desc">All-Time Scoring Leader</div>
+                        </div>
+                        <div class="mini-stats">
+                            <div class="mini-stat"><div class="val">10,628</div><div class="lbl">Rebounds</div></div>
+                            <div class="mini-stat"><div class="val">10,420</div><div class="lbl">Assists</div></div>
+                            <div class="mini-stat"><div class="val">2,223</div><div class="lbl">Steals</div></div>
+                            <div class="mini-stat"><div class="val">1,065</div><div class="lbl">Blocks</div></div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3>The Longevity Argument</h3>
+                        <p>No player has sustained elite-level play for as long. Year 21 and still averaging 23+ points. Jordan retired twice. Kobe declined at 34. LeBron defied time itself.</p>
+                    </div>
+
+                    <!-- INLINE: Career timeline (replaces garbled lebron-timeline.png) -->
+                    <div class="timeline">
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2003</div><div class="timeline-desc">Drafted #1 by Cleveland Cavaliers</div></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2004</div><div class="timeline-desc">Rookie of the Year</div></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2007</div><div class="timeline-desc">First NBA Finals appearance</div></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2012</div><div class="timeline-desc">First Championship &amp; Finals MVP (Miami)</div></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2013</div><div class="timeline-desc">Back-to-back Championship</div></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2016</div><div class="timeline-desc">Historic 3-1 comeback, Cleveland Championship</div></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2020</div><div class="timeline-desc">4th Championship with Lakers</div></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><div class="timeline-year">2023</div><div class="timeline-desc">All-time scoring record (40,474 pts)</div></div></div>
+                    </div>
+                </div>
+
+                <!-- RIGHT PANEL C -->
+                <div class="panel panel-right">
+                    <span class="panel-label">Panel C</span>
+                    <div class="panel-header"><h2>Answering The Critics</h2></div>
+                    <div class="section">
+                        <h3>The Jordan Comparison</h3>
+                        <ul>
+                            <li>&ldquo;Jordan is 6-0 in Finals&rdquo; &mdash; LeBron faced historic superteams (73-9 Warriors) and still won</li>
+                            <li>&ldquo;Jordan's peak was higher&rdquo; &mdash; LeBron's peak lasted 15+ years, not 6</li>
+                            <li>&ldquo;Jordan never needed help&rdquo; &mdash; He had Pippen, Rodman, Phil Jackson</li>
+                        </ul>
+                    </div>
+                    <div class="img-frame">
+                        <img src="/images/v2-lebron-action-gold.png" alt="Basketball player slam dunk">
+                    </div>
+                    <div class="section">
+                        <h3>Beyond Basketball</h3>
+                        <ul>
+                            <li>Built the I PROMISE School in Akron for at-risk youth</li>
+                            <li>Became a billionaire while still playing</li>
+                            <li>Played alongside his own son in the NBA</li>
+                            <li>Used platform for social justice consistently</li>
+                        </ul>
+                    </div>
+                    <div class="section">
+                        <h3>The Verdict</h3>
+                        <p>When you combine the stats, the longevity, the versatility, and the impact off the court&mdash;no one in NBA history matches the totality of what LeBron has built. That's the GOAT.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-panel">
+            <h2>Works Cited</h2>
+            <p>
+                1. ESPN. "LeBron James Career Statistics." espn.com/nba/player/stats/_/id/1966/lebron-james. Accessed May 2025.<br>
+                2. Associated Press. "LeBron James passes Kareem Abdul-Jabbar to become NBA's all-time leading scorer." 7 Feb. 2023.<br>
+                3. Basketball Reference. "LeBron James Stats." basketball-reference.com/players/j/jamesle01.html. Accessed May 2025.<br>
+                4. LeBron James Family Foundation. "I PROMISE School." lebronjamesfamilyfoundation.org/i-promise-school/. School opened July 2018, Akron, Ohio.<br>
+                5. McMenamin, Dave and Tim Bontemps. "LeBron James surpasses Kareem Abdul-Jabbar as NBA's all-time scoring leader." ESPN, 7 Feb. 2023.<br>
+                6. (Primary) NBA.com Official Records &mdash; LeBron James: 4x Champion (2012, 2013, 2016, 2020), 4x Finals MVP, 20x All-Star, only player to win Finals MVP with 3 franchises.<br>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        async function downloadPNG() {
+            const el = document.getElementById('trifold');
+            const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: '#0d0d0d' });
+            const link = document.createElement('a');
+            link.download = 'lebron-goat-trifold-v2.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+    <script src="/trifold-mobile.js" defer></script>
+</body>
+</html>
